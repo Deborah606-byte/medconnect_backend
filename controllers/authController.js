@@ -71,19 +71,19 @@ exports.forgotPassword = async (req, res) => {
     await resetToken.save();
 
     const transporter = nodemailer.createTransport({
-      host: process.env.app_email,
-      port: 587,
-      secure: false, // true for 465, false for other ports
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
-        user: process.env.app_email, // Your Gmail address
-        pass: process.env.app_password, // Your Gmail password
+        user: process.env.app_email,
+        pass: process.env.app_password,
       },
     });
 
     const mailOptions = {
-      from: '"Your Website" <no-reply@yourwebsite.com>', // sender address
-      to: email, // list of receivers
-      subject: "Password Reset Request", // Subject line
+      from: '"Your Website" <no-reply@yourwebsite.com>',
+      to: email,
+      subject: "Password Reset Request",
       text: `You are receiving this because you (or someone else) has requested the reset of the password for your account.\n\n
                Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
                http://localhost:8000/reset/${token}\n\n
@@ -104,10 +104,10 @@ exports.forgotPassword = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-  const { token, newPassword, confirmPassword } = req.body;
+  const { token, newPassword, email } = req.body;
 
   try {
-    const user = await User.findOne({ _id: req.user._id });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).send("No account with that email address exists.");
     }
@@ -115,10 +115,6 @@ exports.resetPassword = async (req, res) => {
     const resetToken = await ResetToken.findOne({ user: user._id, token });
     if (!resetToken) {
       return res.status(404).send("No account with that email address exists.");
-    }
-
-    if (newPassword !== confirmPassword) {
-      return res.status(400).send("Passwords do not match.");
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
