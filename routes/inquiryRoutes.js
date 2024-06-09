@@ -1,6 +1,7 @@
 const express = require("express");
-const router = express.Router();
 const { submitInquiry } = require("../controllers/inquiryController");
+
+const router = express.Router();
 
 router.post("/submit-inquiry", submitInquiry);
 

@@ -1,6 +1,5 @@
 // routes/patientRoutes.js
 const express = require("express");
-const router = express.Router();
 const {
   getAllPatients,
   getPatientById,
@@ -8,6 +7,12 @@ const {
   updatePatient,
   deletePatient,
 } = require("../controllers/patientController");
+const { authenticateUser } = require("../middleware/authenticateUser");
+
+const router = express.Router();
+
+// authentication middleware
+router.use(authenticateUser);
 
 router.get("/all", getAllPatients);
 router.get("/:id", getPatientById);

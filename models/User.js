@@ -1,49 +1,48 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const UserSchema = new mongoose.Schema({
   compoundName: {
     type: String,
-    required: true,
+    required: [true, "Compound Name is required"],
+    unique: [true, "Compound Name already exists"],
   },
   location: {
     type: String,
-    required: true,
+    required: [true, "Location is required"],
   },
   region: {
     type: String,
-    required: true,
+    required: [true, "Region is required"],
   },
   district: {
     type: String,
-    required: true,
+    required: [true, "District is required"],
   },
   operatingHours: {
     type: String,
-    required: true,
+    required: [true, "Operating Hours is required"],
   },
-  availableServices: [
-    {
-      type: [String],
-    },
-  ],
+  availableServices: {
+    type: [String],
+  },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    required: [true, "Email is required"],
+    unique: [true, "Email already exists"],
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Password is required"],
   },
   termsAndConditions: {
     type: Boolean,
-    required: true,
+    required: [true, "Terms and Conditions is required"],
   },
 });
 
-UserSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
