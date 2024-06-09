@@ -8,6 +8,7 @@ function authenticateUser(req, res, next) {
   if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
   jwt.verify(token, secretKey, (err, decoded) => {
+    console.log(decoded)
     if (err) return res.status(403).json({ message: 'Forbidden' });
     req.user = decoded; // Attach the decoded token payload to req.user
     next();
