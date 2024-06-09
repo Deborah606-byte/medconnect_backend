@@ -1,23 +1,18 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const {api} = require("./routes/index")
+const { dbConnect } = require("./config/db");
+const { config } = require("./config/env");
+const { api } = require("./routes/index");
+const { URLS } = require("./data/constants");
 
 const app = express();
+
 app.use(express.json());
+app.use(URLS.root, api);
 
-// Other middleware and configurations...
+dbConnect().then((status) => {
+  if (!status) return process.exit(1);
 
-app.use("/api",api)
-
-
-mongoose
-  .connect(process.env.ATLAS_URI)
-  .then(() => {
-    console.log("DB connection established");
-    app.listen(8000, () => {
-      console.log("Server started on port 8000");
-    });
-  })
-  .catch((e) => {
-    console.log(e);
-  });
+  app.listen(config.PORT, () =>
+    console.log(`"server up on port: ${config.PORT}`)
+  );
+});

@@ -1,18 +1,17 @@
 const express = require("express");
-const userRoutes = require("../routes/userRoute");
-const authRoutes = require("../routes/authRoute");
-const inquiryRoutes = require("../routes/inquiryRoutes");
-const patientRoutes = require("../routes/patientRoutes");
-const prescriptionRoutes = require("../routes/prescriptionRoutes");
-
+const { URLS } = require("../data/constants");
+const { auth } = require("./auth");
+const { user } = require("./user");
+const { inquiry } = require("./inquiry");
+const { patient } = require("./patient");
+const { prescription } = require("./prescription");
 
 const router = express.Router();
 
+app.use(URLS.auth.root, auth);
+app.use(URLS.user.root, user);
+app.use(URLS.patient.root, patient);
+app.use(URLS.inquiry.root, inquiry);
+app.use(URLS.prescription.root, prescription);
 
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/inquiries", inquiryRoutes);
-app.use("/api/patients", patientRoutes);
-app.use("/api/prescriptions", prescriptionRoutes);
-
-module.exports.api = router
+module.exports.api = router;
