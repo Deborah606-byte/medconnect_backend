@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ResetTokenSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
   token: {
@@ -13,8 +13,8 @@ const ResetTokenSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 3600000, 
+    expires: 3600000,
   },
 });
 
-module.exports = mongoose.model('ResetToken', ResetTokenSchema);
+module.exports = mongoose.model("ResetToken", ResetTokenSchema);

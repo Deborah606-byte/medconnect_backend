@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/userRoute");
 const authRoutes = require("./routes/authRoute");
+const inquiryRoutes = require("./routes/inquiryRoutes");
+const patientRoutes = require("./routes/patientRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -11,6 +13,8 @@ app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/inquiries", inquiryRoutes);
+app.use("/api/patients", patientRoutes);
 
 mongoose
   .connect(process.env.ATLAS_URI)

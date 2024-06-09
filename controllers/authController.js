@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const ResetToken = require("../models/ResetToken");
+const { sendEmail } = require("../util/sendEmailService");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -70,27 +71,15 @@ exports.forgotPassword = async (req, res) => {
 
     await resetToken.save();
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.app_email,
-        pass: process.env.app_password,
-      },
-    });
+    // email content
+    const emailSubject = "Password Reset Request";
+    const emailText = `You are receiving this because you (or someone else) has requested the reset of the password for your account.\n\n
+                       Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
+                       http://localhost:8000/reset/${token}\n\n
+                       If you did not request this, please ignore this email and your password will remain unchanged.`;
 
-    const mailOptions = {
-      from: '"Your Website" <no-reply@yourwebsite.com>',
-      to: email,
-      subject: "Password Reset Request",
-      text: `You are receiving this because you (or someone else) has requested the reset of the password for your account.\n\n
-               Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
-               http://localhost:8000/reset/${token}\n\n
-               If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-    };
-
-    await transporter.sendMail(mailOptions);
+    // Send the email
+    await sendEmail(email, emailSubject, emailText);
 
     res.send(
       "An email has been sent to " +
