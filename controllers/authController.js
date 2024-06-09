@@ -39,19 +39,15 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) return res.sendStatus(401);
-
-  const token = authHeader.split(" ")[1];
-
-  jwt.verify(token, secretKey, (err, user) => {
-    if (err) return res.sendStatus(403);
-
-    const newToken = jwt.sign({}, secretKey, { expiresIn: "1s" });
+  try {
+    const { userId } = req.user;
+    const newToken = jwt.sign({ userId }, secretKey, { expiresIn: "1s" });
 
     res.cookie("token", newToken, { maxAge: 1000, httpOnly: true });
     res.send({ msg: "You have been logged out" });
-  });
+  } catch (error) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 exports.forgotPassword = async (req, res) => {

@@ -4,6 +4,7 @@ const userRoutes = require("./routes/userRoute");
 const authRoutes = require("./routes/authRoute");
 const inquiryRoutes = require("./routes/inquiryRoutes");
 const patientRoutes = require("./routes/patientRoutes");
+const prescriptionRoutes = require("./routes/prescriptionRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -15,6 +16,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/inquiries", inquiryRoutes);
 app.use("/api/patients", patientRoutes);
+app.use("/api/prescriptions", prescriptionRoutes);
 
 mongoose
   .connect(process.env.ATLAS_URI)
