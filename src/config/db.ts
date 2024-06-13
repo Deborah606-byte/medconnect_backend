@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const { config } = require("./env");
+import mongoose from "mongoose";
+import { config } from "./env";
 
-module.exports.dbConnect = async function () {
+export const dbConnect = async function () {
   try {
     await mongoose.connect(config.ATLAS_URI);
     return true;
