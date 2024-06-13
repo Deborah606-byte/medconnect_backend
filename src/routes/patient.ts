@@ -1,6 +1,6 @@
 // routes/patientRoutes.js
 import express from "express";
-import { URLS } from "../data/constants";
+import { URLS } from "../config/constants";
 
 // const {
 //   getAllPatients,

@@ -1,7 +1,7 @@
 import express from "express";
-import { URLS } from "../data/constants";
+import { URLS } from "../config/constants";
 import { auth } from "./auth";
-import { user } from "./user";
+import { user } from "./chps-compund";
 import { inquiry } from "./inquiry";
 import { patient } from "./patient";
 import { prescription } from "./prescription";

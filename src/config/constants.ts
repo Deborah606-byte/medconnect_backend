@@ -1,5 +1,15 @@
+import path from "path";
+
 const FE_URL_DEV = "http://localhost:3000";
 const FE_URL_LIVE = "";
+const LOGS_DIR = path.join(__dirname, "..", "..", "logs");
+
+export const APP_LOG = path.join(LOGS_DIR, "app.log");
+export const REQUEST_LOG = path.join(LOGS_DIR, "request.log");
+export const STATUSES = {
+  SUCCESS: true,
+  FAILED: false,
+};
 
 export const CORS_OPTIONS = {
   origin: [FE_URL_DEV, FE_URL_LIVE],
