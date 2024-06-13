@@ -1,5 +1,5 @@
 import express from "express";
-import { URLS } from "../data/constants";
+import { URLS } from "../config/constants";
 // const { submitInquiry } = require("../controllers/inquiry");
 
 const router = express.Router();

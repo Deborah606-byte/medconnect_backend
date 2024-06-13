@@ -6,7 +6,7 @@ import express from "express";
 //   resetPassword,
 // } = require("../controllers/auth");
 // const { authenticateUser } = require("../middleware/authenticateUser");
-import { URLS } from "../data/constants";
+import { URLS } from "../config/constants";
 
 const router = express.Router();
 
