@@ -6,6 +6,7 @@ const LOGS_DIR = path.join(__dirname, "..", "..", "logs");
 
 export const APP_LOG = path.join(LOGS_DIR, "app.log");
 export const REQUEST_LOG = path.join(LOGS_DIR, "request.log");
+export const STAFF_ROLES = ["Admin", "Staff"] as const;
 export const STATUSES = {
   SUCCESS: true,
   FAILED: false,
