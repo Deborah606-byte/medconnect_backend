@@ -1,8 +1,7 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-  compoundName: {
+  name: {
     type: String,
     required: [true, "Compound Name is required"],
     unique: [true, "Compound Name already exists"],
@@ -25,6 +24,7 @@ const UserSchema = new mongoose.Schema({
   },
   availableServices: {
     type: [String],
+    default: [],
   },
   email: {
     type: String,
@@ -41,10 +41,4 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
-
-module.exports = mongoose.model("User", UserSchema);
+export const User = mongoose.model("User", UserSchema);
