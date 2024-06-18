@@ -1,44 +1,27 @@
 import mongoose from "mongoose";
 
-const UserSchema = new mongoose.Schema({
+const requiredString = {
+  type: String,
+  required: true,
+};
+
+const chpsCompound = new mongoose.Schema({
   name: {
-    type: String,
-    required: [true, "Compound Name is required"],
-    unique: [true, "Compound Name already exists"],
+    unique: true,
+    ...requiredString,
   },
-  location: {
-    type: String,
-    required: [true, "Location is required"],
-  },
-  region: {
-    type: String,
-    required: [true, "Region is required"],
-  },
-  district: {
-    type: String,
-    required: [true, "District is required"],
-  },
-  operatingHours: {
-    type: String,
-    required: [true, "Operating Hours is required"],
-  },
+  location: requiredString,
+  region: requiredString,
+  district: requiredString,
+  operatingHours: requiredString,
   availableServices: {
     type: [String],
     default: [],
   },
-  email: {
-    type: String,
-    required: [true, "Email is required"],
-    unique: [true, "Email already exists"],
-  },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-  },
-  termsAndConditions: {
+  hasAcceptedTC: {
     type: Boolean,
-    required: [true, "Terms and Conditions is required"],
+    required: true,
   },
 });
 
-export const User = mongoose.model("User", UserSchema);
+export const UschpsCompound = mongoose.model("User", chpsCompound);
