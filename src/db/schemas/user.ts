@@ -12,4 +12,16 @@ const roleSchema = z.object({
   staffId: z.string(),
 });
 
-export { userSchema, roleSchema };
+const staffSchema = z.object({
+  staffID: z.string(),
+  fullName: z.string(),
+  dateOfBirth: z.string(),
+  dateOfHire: z.string(),
+  position: z.string(),
+  email: z.string().email(),
+  gender: z.enum(["Male", "Female", "Other"]),
+  workSchedule: z.array(z.string()),
+  chpsId: z.string(),
+});
+
+export { userSchema, roleSchema, staffSchema };
