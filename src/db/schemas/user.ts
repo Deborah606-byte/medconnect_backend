@@ -4,7 +4,7 @@ import { STAFF_ROLES } from "../../config/constants";
 const userSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  chpsId: z.string(),
+  chpsCompoundId: z.string(),
 });
 
 const roleSchema = z.object({
@@ -21,7 +21,7 @@ const staffSchema = z.object({
   email: z.string().email(),
   gender: z.enum(["Male", "Female", "Other"]),
   workSchedule: z.array(z.string()),
-  chpsId: z.string(),
+  chpsCompoundId: z.string(),
 });
 
 export { userSchema, roleSchema, staffSchema };

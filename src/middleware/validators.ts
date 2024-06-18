@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { chpsCompoundSchema } from "../db/schemas/chps-compound";
+import { userSchema } from "../db/schemas/user";
 import type { Request, Response, NextFunction } from "express";
 
 function validateData(schema: z.ZodObject<any, any>) {
@@ -24,4 +25,6 @@ function validateParams(schema: z.ZodObject<any, any>) {
   };
 }
 
-export const validateChpsData = validateData(chpsCompoundSchema);
+export const validateChpsCompoundData = validateData(
+  chpsCompoundSchema.merge(userSchema.omit({ chpsCompoundId: true }))
+);
