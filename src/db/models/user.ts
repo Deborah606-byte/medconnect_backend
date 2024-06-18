@@ -15,7 +15,7 @@ const user = new mongoose.Schema(
       required: true,
     },
     password: requiredString,
-    chpsId: requiredString,
+    chpsCompoundId: requiredString,
   },
   { timestamps: true }
 );
@@ -32,7 +32,7 @@ const role = new mongoose.Schema({
 const staff = new mongoose.Schema(
   {
     staffID: requiredString,
-    chpsId: requiredString,
+    chpsCompoundId: requiredString,
     fullName: requiredString,
     dateOfBirth: requiredString,
     dateOfHire: requiredString,
