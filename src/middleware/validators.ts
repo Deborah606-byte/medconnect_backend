@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { chpsCompoundSchema } from "../zschemas/chps-compound";
+import { chpsCompoundSchema } from "../db/schemas/chps-compound";
 import type { Request, Response, NextFunction } from "express";
 
 function validateData(schema: z.ZodObject<any, any>) {
