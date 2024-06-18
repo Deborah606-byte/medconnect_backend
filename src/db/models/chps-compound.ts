@@ -24,4 +24,4 @@ const chpsCompound = new mongoose.Schema({
   },
 });
 
-export const UschpsCompound = mongoose.model("User", chpsCompound);
+export const ChpsCompound = mongoose.model("User", chpsCompound);
