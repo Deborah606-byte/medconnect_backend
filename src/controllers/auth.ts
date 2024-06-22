@@ -58,21 +58,11 @@ export const login = catchAsync(
   }
 );
 
-// // Logout
-// // exports.logout = (req, res) => {
-// //   try {
-// //     const { userId } = req.user;
-// //     const newToken = generateToken({ userId }, "1s");
-
-// //     // Set the new token in the cookie
-// //     res.cookie("token", newToken, { maxAge: 1000, httpOnly: true });
-// //     res
-// //       .status(200)
-// //       .json({ message: "You have been logged out", success: true });
-// //   } catch (error) {
-// //     res.status(500).json({ message: err.message, success: false });
-// //   }
-// // };
+export const logout = async (req: Request, res: Response) => {
+  const token = req.headers.authorization!.split(" ")[1];
+  authUtil.addTokenToBlacklist(token);
+  return res.json({ status: STATUSES.SUCCESS });
+};
 
 // // Forgot Password
 // // exports.forgotPassword = async (req, res) => {
