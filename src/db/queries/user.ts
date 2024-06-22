@@ -1,5 +1,5 @@
 import { User, Role, Staff } from "../models/user";
-import { generateHashedPassword } from "../../utils/auth";
+import { authUtil } from "../../utils/auth";
 import type { UserData, RoleData, StaffData } from "../../types/chps-compound";
 
 export const createRole = async (data: RoleData) => await Role.create(data);
@@ -12,7 +12,7 @@ export const getDefaultStaff = async (userId: string, email: string) =>
 
 // User
 export const createUser = async (data: UserData) => {
-  const hashedPassword = await generateHashedPassword(data.password);
+  const hashedPassword = await authUtil.generateHashedPassword(data.password);
   return await User.create({ ...data, password: hashedPassword });
 };
 export const getUserByEmail = async (email: string) => {

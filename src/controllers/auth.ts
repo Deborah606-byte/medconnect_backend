@@ -2,7 +2,7 @@ import AppError from "../utils/app-error";
 import { catchAsync } from "../utils/catch-async";
 import { StatusCodes } from "http-status-codes";
 import { STATUSES } from "../config/constants";
-import { comparePassword, generateAuthToken } from "../utils/auth";
+import { authUtil } from "../utils/auth";
 import {
   getUserByEmail,
   getDefaultStaff,
@@ -20,8 +20,8 @@ export const login = catchAsync(
       return next(new AppError("User Does Not Exist", StatusCodes.NOT_FOUND));
     }
 
-    const isValidPassword = await comparePassword(password, user.password);
-    if (!isValidPassword) {
+    const checked = await authUtil.isPasswordValid(password, user.password);
+    if (!checked) {
       return next(
         new AppError("Invalid email or password", StatusCodes.BAD_REQUEST)
       );
@@ -50,7 +50,7 @@ export const login = catchAsync(
           email,
           id: user._id,
           role: role.type,
-          token: generateAuthToken(tokenData),
+          token: authUtil.generateToken(tokenData),
         },
         staff: staff,
       },
