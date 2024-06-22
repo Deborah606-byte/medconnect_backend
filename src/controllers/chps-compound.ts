@@ -1,16 +1,14 @@
 import { createChpsCompound } from "../db/queries/chps-compound";
 import { catchAsync } from "../utils/catch-async";
 import { STATUSES } from "../config/constants";
-import type { NextFunction, Request, Response } from "express";
+import type { Request, Response } from "express";
 import type { ChpsCompundData } from "../types/chps-compound";
 
-export const createChps = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const data = req.body as ChpsCompundData;
-    const response = await createChpsCompound(data);
-    return res.json({ status: STATUSES.SUCCESS, data: response });
-  }
-);
+export const createChps = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body as ChpsCompundData;
+  const response = await createChpsCompound(data);
+  return res.json({ status: STATUSES.SUCCESS, data: response });
+});
 
 // Get user by id
 // exports.getUserById = async (req, res) => {

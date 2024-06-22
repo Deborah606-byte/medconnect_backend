@@ -4,6 +4,7 @@ import { z } from "zod";
 const EnvSchema = z.object({
   PORT: z.coerce.number(),
   ATLAS_URI: z.string(),
+  JWT_SECRET: z.string(),
 });
 
 dotenv.config();
@@ -16,5 +17,4 @@ try {
   process.exit(1);
 }
 
-const env = EnvSchema.parse(process.env);
-export const config = { PORT: env.PORT, ATLAS_URI: env.ATLAS_URI };
+export const config = EnvSchema.parse(process.env);

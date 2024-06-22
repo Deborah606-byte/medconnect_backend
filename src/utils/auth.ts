@@ -1,4 +1,7 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { config } from "../config/env";
+import type { TokenData } from "../types/chps-compound";
 
 export const generateHashedPassword = async (password: string) => {
   const salt = await bcrypt.genSalt(10);
@@ -10,11 +13,8 @@ export const comparePassword = async (
   hashedPassword: string
 ) => await bcrypt.compare(password, hashedPassword);
 
-// Generate JWT token
-// const generateToken = (payload, expiryTime = "1h") => {
-//   const token = jwt.sign(payload, secretKey, { expiresIn: expiryTime });
-//   return token;
-// };
+export const generateAuthToken = (data: TokenData) =>
+  jwt.sign(data, config.JWT_SECRET, { expiresIn: "1h" });
 
 // Verify JWT token
 // const verifyToken = (token) => {
