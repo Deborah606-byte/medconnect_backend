@@ -2,22 +2,54 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../config/env";
 import type { TokenData } from "../types/chps-compound";
+class AuthUtility {
+  private tokenBlacklist = new Set<string>();
+  private jwtSecret: string;
+  private bcryptRounds = 10;
 
-export const generateHashedPassword = async (password: string) => {
-  const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(password, salt);
-};
+  constructor(secret: string) {
+    this.jwtSecret = secret;
+    this.startExpiredTokensCleanup();
+  }
 
-export const comparePassword = async (
-  password: string,
-  hashedPassword: string
-) => await bcrypt.compare(password, hashedPassword);
+  private isTokenBlacklisted(token: string) {
+    return this.tokenBlacklist.has(token);
+  }
+  private decodeToken(token: string) {
+    try {
+      return jwt.verify(token, this.jwtSecret) as TokenData & { iat: number };
+    } catch (error) {
+      return null;
+    }
+  }
+  private startExpiredTokensCleanup() {
+    setInterval(() => {
+      for (const token of this.tokenBlacklist) {
+        const { iat } = this.decodeToken(token) as { iat: number };
+        if (Date.now() > iat) this.tokenBlacklist.delete(token);
+      }
+    }),
+      15 * 60 * 1000;
+  }
 
-export const generateAuthToken = (data: TokenData) =>
-  jwt.sign(data, config.JWT_SECRET, { expiresIn: "1h" });
+  public async generateHashedPassword(password: string) {
+    const salt = await bcrypt.genSalt(this.bcryptRounds);
+    return await bcrypt.hash(password, salt);
+  }
+  public async isPasswordValid(password: string, hashedPassword: string) {
+    return await bcrypt.compare(password, hashedPassword);
+  }
+  public generateToken(data: TokenData) {
+    return jwt.sign(data, this.jwtSecret, { expiresIn: "1h" });
+  }
+  public addTokenToBlacklist(token: string) {
+    this.tokenBlacklist.add(token);
+  }
+  public verifyToken(token: string) {
+    if (this.isTokenBlacklisted(token)) return { valid: false };
+    const data = this.decodeToken(token);
+    return { valid: !!data, data };
+  }
+}
 
-// Verify JWT token
-// const verifyToken = (token) => {
-//   const decoded = jwt.verify(token, secretKey);
-//   return decoded;
-// };
+export const authUtil = new AuthUtility(config.JWT_SECRET);
