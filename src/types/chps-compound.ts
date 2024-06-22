@@ -1,4 +1,16 @@
 import { z } from "zod";
-import { chpsCompoundSchema } from "../zschemas/chps-compound";
+import {
+  userSchema,
+  roleSchema,
+  staffSchema,
+  loginDataSchema,
+} from "../db/schemas/user";
+import { chpsCompoundSchema } from "../db/schemas/chps-compound";
 
-export type ChpsCompundData = z.infer<typeof chpsCompoundSchema>;
+type ChpsData = z.infer<typeof chpsCompoundSchema>;
+export type LoginData = z.infer<typeof loginDataSchema>;
+export type UserData = z.infer<typeof userSchema>;
+export type RoleData = z.infer<typeof roleSchema>;
+export type StaffData = z.infer<typeof staffSchema>;
+export type ChpsCompundData = ChpsData & Omit<UserData, "chpsCompoundId">;
+export type TokenData = { user: string; staff: string; role: string };

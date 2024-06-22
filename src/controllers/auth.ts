@@ -1,50 +1,62 @@
-// const User = require("../models/User");
-// const ResetToken = require("../models/ResetToken");
-// const { sendEmail } = require("../utils/sendEmailService");
-// const { comparePassword, generateToken, hashPassword } = require("../utils");
+import AppError from "../utils/app-error";
+import { catchAsync } from "../utils/catch-async";
+import { StatusCodes } from "http-status-codes";
+import { STATUSES } from "../config/constants";
+import { comparePassword, generateAuthToken } from "../utils/auth";
+import {
+  getUserByEmail,
+  getDefaultStaff,
+  getRoleByStaffId,
+} from "../db/queries/user";
+import type { LoginData } from "../types/chps-compound";
+import type { Request, Response, NextFunction } from "express";
 
-// // Login
-// // exports.login = async (req, res) => {
-// //   if (!req.body.compoundName || !req.body.password) {
-// //     return res.status(400).json({
-// //       message: "Compound name and password are required.",
-// //       success: false,
-// //     });
-// //   }
+export const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body as LoginData;
 
-// //   try {
-// //     const user = await User.findOne({ compoundName: req.body.compoundName });
-// //     if (!user) {
-// //       return res.status(401).json({
-// //         message: "Invalid compound name or password.",
-// //         success: false,
-// //       });
-// //     }
+    const user = await getUserByEmail(email);
+    if (!user) {
+      return next(new AppError("User Does Not Exist", StatusCodes.NOT_FOUND));
+    }
 
-// //     // Check if password is correct
-// //     const validPassword = await comparePassword(
-// //       req.body.password,
-// //       user.password
-// //     );
+    const isValidPassword = await comparePassword(password, user.password);
+    if (!isValidPassword) {
+      return next(
+        new AppError("Invalid email or password", StatusCodes.BAD_REQUEST)
+      );
+    }
 
-// //     if (!validPassword) {
-// //       return res.status(401).json({
-// //         message: "Invalid compound name or password.",
-// //         success: false,
-// //       });
-// //     }
+    const staff = await getDefaultStaff(user._id.toString(), email);
+    const role = await getRoleByStaffId(staff?._id?.toString() ?? "");
 
-// //     // Generate JWT token
-// //     const token = generateToken({ userId: user._id }, "1h");
-// //     res.json({
-// //       message: "Logged in successfully.",
-// //       data: { token },
-// //       success: true,
-// //     });
-// //   } catch (err) {
-// //     res.status(500).json({ message: err.message, success: false });
-// //   }
-// // };
+    if (!staff || !role) {
+      return next(
+        new AppError(
+          "Error, please contact your admin",
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
+      );
+    }
+    const tokenData = {
+      user: user._id.toString(),
+      staff: staff._id.toString(),
+      role: role._id.toString(),
+    };
+    res.json({
+      status: STATUSES.SUCCESS,
+      data: {
+        auth: {
+          email,
+          id: user._id,
+          role: role.type,
+          token: generateAuthToken(tokenData),
+        },
+        staff: staff,
+      },
+    });
+  }
+);
 
 // // Logout
 // // exports.logout = (req, res) => {
