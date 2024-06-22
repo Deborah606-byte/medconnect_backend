@@ -1,49 +1,14 @@
-const User = require("../models/User");
-const { getUser } = require("../utils/getUser");
+import { createChpsCompound } from "../db/queries/chps-compound";
+import { catchAsync } from "../utils/catch-async";
+import { STATUSES } from "../config/constants";
+import type { Request, Response } from "express";
+import type { ChpsCompundData } from "../types/chps-compound";
 
-// Create a new user
-// exports.createUser = async (req, res) => {
-//   const {
-//     compoundName,
-//     location,
-//     region,
-//     district,
-//     operatingHours,
-//     email,
-//     password,
-//     termsAndConditions,
-//   } = req.body;
-
-//   if (
-//     !compoundName ||
-//     !location ||
-//     !region ||
-//     !district ||
-//     !operatingHours ||
-//     !email ||
-//     !password ||
-//     !termsAndConditions
-//   ) {
-//     return res
-//       .status(400)
-//       .json({ message: "All fields are required", success: false });
-//   }
-
-//   const newUser = new User(req.body);
-
-//   try {
-//     const savedUser = await newUser.save();
-
-//     res.status(201).json({
-//       message: "User created successfully",
-//       data: getUser(savedUser),
-//       success: true,
-//     });
-//   } catch (err) {
-//     console.log({ err, errors: err?.errors });
-//     res.status(500).json({ message: err.message, success: false });
-//   }
-// };
+export const createChps = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body as ChpsCompundData;
+  const response = await createChpsCompound(data);
+  return res.json({ status: STATUSES.SUCCESS, data: response });
+});
 
 // Get user by id
 // exports.getUserById = async (req, res) => {
