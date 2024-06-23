@@ -12,13 +12,16 @@ const role = new mongoose.Schema({
     enum: STAFF_ROLES,
     required: true,
   },
-  staffId: requiredString,
+  staffId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Staff",
+    required: true,
+  },
 });
 
 const staff = new mongoose.Schema(
   {
     staffID: requiredString,
-    chpsCompoundId: requiredString,
     fullName: requiredString,
     dateOfBirth: requiredString,
     dateOfHire: requiredString,
@@ -33,6 +36,11 @@ const staff = new mongoose.Schema(
       enum: ["Male", "Female", "Other"],
     },
     workSchedule: [String],
+    chpsCompoundId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ChpsCompound",
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { chpsCompoundSchema } from "../db/schemas/chps-compound";
+import {
+  chpsCompoundSchema,
+  chpsCompoundParamsSchema,
+} from "../db/schemas/chps-compound";
 import {
   userSchema,
   loginDataSchema,
@@ -22,7 +25,7 @@ function validateData(schema: z.ZodObject<any, any>) {
 function validateParams(schema: z.ZodObject<any, any>) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.query);
+      schema.parse(req.params);
       next();
     } catch (err) {
       next(err);
@@ -33,6 +36,9 @@ function validateParams(schema: z.ZodObject<any, any>) {
 export const validateLoginData = validateData(loginDataSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
 export const validateResetPasswordData = validateData(resetPasswordDataSchema);
+export const validateChpsRequestParams = validateParams(
+  chpsCompoundParamsSchema
+);
 export const validateChpsCompoundData = validateData(
-  chpsCompoundSchema.merge(userSchema.omit({ chpsCompoundId: true }))
+  chpsCompoundSchema.omit({ authUserId: true }).merge(userSchema)
 );
