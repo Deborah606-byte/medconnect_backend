@@ -10,6 +10,8 @@ const chpsCompound = new mongoose.Schema({
     unique: true,
     ...requiredString,
   },
+  contact: requiredString,
+  emergencyContact: requiredString,
   location: requiredString,
   region: requiredString,
   district: requiredString,
@@ -21,6 +23,10 @@ const chpsCompound = new mongoose.Schema({
   hasAcceptedTC: {
     type: Boolean,
     required: true,
+  },
+  profilePictureUrl: {
+    type: String,
+    default: "",
   },
 });
 

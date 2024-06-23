@@ -13,6 +13,7 @@ export const staffSchema = z.object({
   dateOfHire: z.string(),
   position: z.string(),
   email: z.string().email(),
+  contact: z.string().min(8),
   gender: z.enum(["Male", "Female", "Other"]),
   workSchedule: z.array(z.string()),
   chpsCompoundId: z.string(),

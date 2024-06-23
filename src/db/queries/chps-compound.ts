@@ -1,5 +1,7 @@
 import { ChpsCompound } from "../models/chps-compound";
-import { createUser, createRole, createStaff } from "./user";
+import { createUser } from "./user";
+import { createRole, createStaff } from "./staff";
+import type { ObjectId } from "mongodb";
 import type { ChpsCompundData, StaffData } from "../../types/chps-compound";
 
 export const createChpsCompound = async (data: ChpsCompundData) => {
@@ -11,11 +13,12 @@ export const createChpsCompound = async (data: ChpsCompundData) => {
     email,
     chpsCompoundId,
     fullName: name,
+    contact: data.contact,
     gender: "Other",
     staffID: "default_Staff",
+    position: "Staff",
     dateOfBirth: new Date().toISOString(),
     dateOfHire: new Date().toISOString(),
-    position: "Staff",
     workSchedule: [],
   };
 
@@ -27,3 +30,7 @@ export const createChpsCompound = async (data: ChpsCompundData) => {
     staff: defaultStaff.toObject(),
   };
 };
+
+export const getAllChpsCompounds = async () => await ChpsCompound.find({});
+export const getChpsCompoundById = async (id: string) =>
+  await ChpsCompound.findById(id);
