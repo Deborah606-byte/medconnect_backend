@@ -1,26 +1,30 @@
 import express from "express";
 import { URLS } from "../config/constants";
 import {
-  createChps,
-  getChpsCompound,
-  getChpsCompounds,
+  createCompound,
+  getCompound,
+  getCompounds,
+  deleteCompound,
 } from "../controllers/chps-compound";
 import {
   validateChpsCompoundData,
   validateChpsRequestParams,
 } from "../middleware/validators";
+import { authorizeAdmin, authorizeUser } from "../middleware/auth-requests";
 
 const router = express.Router();
 
-router.post(URLS.chps.all, validateChpsCompoundData, createChps);
-router.get(
+router.post(
   URLS.chps.all,
-  validateChpsRequestParams,
+  validateChpsCompoundData,
   authorizeAdmin,
-  getChpsCompounds
+  createCompound
 );
-router.get(URLS.chps.one, validateChpsRequestParams, getChpsCompound);
-router.delete(URLS.chps.one, validateChpsRequestParams, authorizeAdmin);
+router.use(validateChpsRequestParams, authorizeUser);
+router.get(URLS.chps.one, getCompound);
+router.get(URLS.chps.all, authorizeAdmin, getCompounds);
+router.delete(URLS.chps.one, authorizeAdmin, deleteCompound);
+
 // router.put(URLS.user.one, updateUser);
 
 export const chps = router;
