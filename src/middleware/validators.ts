@@ -4,6 +4,7 @@ import {
   userSchema,
   loginDataSchema,
   forgotPasswordData,
+  resetPasswordDataSchema,
 } from "../db/schemas/user";
 import type { Request, Response, NextFunction } from "express";
 
@@ -31,6 +32,7 @@ function validateParams(schema: z.ZodObject<any, any>) {
 
 export const validateLoginData = validateData(loginDataSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
+export const validateResetPasswordData = validateData(resetPasswordDataSchema);
 export const validateChpsCompoundData = validateData(
   chpsCompoundSchema.merge(userSchema.omit({ chpsCompoundId: true }))
 );

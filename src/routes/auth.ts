@@ -4,14 +4,24 @@ import { authenticate } from "../middleware/authenticateUser";
 import {
   validateLoginData,
   validateForgotPasswordData,
+  validateResetPasswordData,
 } from "../middleware/validators";
-import { login } from "../controllers/auth";
+import {
+  login,
+  logout,
+  forgotPassword,
+  resetPassword,
+} from "../controllers/auth";
 
 const router = express.Router();
 
 router.post(URLS.auth.login, validateLoginData, login);
-router.post(URLS.auth.logout, authenticate);
-router.post(URLS.auth.forgotPassword, validateForgotPasswordData);
-// router.post(URLS.auth.resetPassword, resetPassword);
+router.post(URLS.auth.logout, authenticate, logout);
+router.post(URLS.auth.resetPassword, validateResetPasswordData, resetPassword);
+router.post(
+  URLS.auth.forgotPassword,
+  validateForgotPasswordData,
+  forgotPassword
+);
 
 export const auth = router;

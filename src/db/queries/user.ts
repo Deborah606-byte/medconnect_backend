@@ -12,9 +12,19 @@ export const getUserByEmail = async (email: string) => {
   return await User.findOne({ email });
 };
 
-//Reset Token
+export const updateUserPassword = async (id: string, password: string) => {
+  const hashedPassword = await authUtil.generateHashedPassword(password);
+  return await User.findByIdAndUpdate(id, { password: hashedPassword });
+};
 
+//Reset Token
 export const createResetToken = async (user: ObjectId) => {
   const token = crypto.randomUUID();
   return await ResetToken.create({ user, token });
 };
+
+export const getResetToken = async (user: ObjectId, token: string) => {
+  return await ResetToken.findOne({ user, token });
+};
+export const deleteResetToken = async (id: string) =>
+  await ResetToken.findByIdAndDelete(id);
