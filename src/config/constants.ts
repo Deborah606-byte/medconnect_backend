@@ -30,6 +30,11 @@ export const URLS = {
     resetPassword: "/reset-password",
     forgotPassword: "/forgot-password",
   },
+  admin: {
+    root: "/admin",
+    all: "/:user",
+    one: "/:user/:id",
+  },
 };
 
 export const EMAIL = {
