@@ -5,25 +5,24 @@ import type { ObjectId } from "mongodb";
 import type { ChpsCompundData, StaffData } from "../../types/chps-compound";
 
 export const createChpsCompound = async (data: ChpsCompundData) => {
-  const chpsCompound = await ChpsCompound.create(data);
-
   const { name, email, password } = data;
-  const chpsCompoundId = chpsCompound._id.toString();
+  const { _id } = await createUser({ email, password });
+  const chpsCompound = await ChpsCompound.create({ ...data, authUserId: _id });
+
   const defaultStaffData: StaffData = {
     email,
-    chpsCompoundId,
     fullName: name,
     contact: data.contact,
     gender: "Other",
     staffID: "default_Staff",
     position: "Staff",
+    workSchedule: [],
     dateOfBirth: new Date().toISOString(),
     dateOfHire: new Date().toISOString(),
-    workSchedule: [],
+    chpsCompoundId: chpsCompound._id.toString(),
   };
 
   const defaultStaff = await createStaff(defaultStaffData);
-  await createUser({ email, password, chpsCompoundId });
   await createRole({ type: "Staff", staffId: defaultStaff._id.toString() });
   return {
     chpsCompound: chpsCompound.toObject(),

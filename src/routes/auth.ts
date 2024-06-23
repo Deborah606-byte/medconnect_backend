@@ -1,6 +1,6 @@
 import express from "express";
 import { URLS } from "../config/constants";
-import { authenticate } from "../middleware/auth";
+import { authenticate } from "../middleware/authenticateUser";
 import {
   validateLoginData,
   validateForgotPasswordData,

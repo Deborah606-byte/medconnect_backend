@@ -28,6 +28,11 @@ const chpsCompound = new mongoose.Schema({
     type: String,
     default: "",
   },
+  authUserId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
-export const ChpsCompound = mongoose.model("User", chpsCompound);
+export const ChpsCompound = mongoose.model("ChpsCompound", chpsCompound);

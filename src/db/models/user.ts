@@ -1,10 +1,5 @@
 import mongoose from "mongoose";
 
-const requiredString = {
-  type: String,
-  required: true,
-};
-
 const user = new mongoose.Schema(
   {
     email: {
@@ -13,8 +8,10 @@ const user = new mongoose.Schema(
       lowercase: true,
       required: true,
     },
-    password: requiredString,
-    chpsCompoundId: requiredString,
+    password: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -25,7 +22,10 @@ const resetToken = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  token: requiredString,
+  token: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
