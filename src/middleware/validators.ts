@@ -36,6 +36,7 @@ function validateParams(schema: z.ZodObject<any, any>) {
 export const validateLoginData = validateData(loginDataSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
 export const validateResetPasswordData = validateData(resetPasswordDataSchema);
+export const validateChpsUpdateData = validateData(chpsCompoundSchema);
 export const validateChpsRequestParams = validateParams(
   chpsCompoundParamsSchema
 );

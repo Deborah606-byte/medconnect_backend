@@ -14,7 +14,7 @@ export type UserData = z.infer<typeof userSchema>;
 export type RoleData = z.infer<typeof roleSchema>;
 export type StaffData = z.infer<typeof staffSchema>;
 export type ResetPasswordData = z.infer<typeof resetPasswordDataSchema>;
-export type ChpsCompundData = ChpsData & Omit<UserData, "chpsCompoundId">;
+export type ChpsCompundData = ChpsData & UserData;
 export type TokenData = {
   user: string;
   staff: string;

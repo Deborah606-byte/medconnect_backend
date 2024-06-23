@@ -5,10 +5,12 @@ import {
   getCompound,
   getCompounds,
   deleteCompound,
+  updateCompound,
 } from "../controllers/chps-compound";
 import {
   validateChpsCompoundData,
   validateChpsRequestParams,
+  validateChpsUpdateData,
 } from "../middleware/validators";
 import { authorizeAdmin, authorizeUser } from "../middleware/auth-requests";
 
@@ -22,9 +24,8 @@ router.post(
 );
 router.use(validateChpsRequestParams, authorizeUser);
 router.get(URLS.chps.one, getCompound);
+router.put(URLS.chps.one, validateChpsUpdateData, updateCompound);
 router.get(URLS.chps.all, authorizeAdmin, getCompounds);
 router.delete(URLS.chps.one, authorizeAdmin, deleteCompound);
-
-// router.put(URLS.user.one, updateUser);
 
 export const chps = router;

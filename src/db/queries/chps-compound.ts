@@ -29,7 +29,8 @@ export const createChpsCompound = async (data: ChpsCompundData) => {
     staff: defaultStaff.toObject(),
   };
 };
-
+export const updateChpsCompound = async (id: string, data: ChpsCompundData) =>
+  await ChpsCompound.findByIdAndUpdate(id, data);
 export const getAllChpsCompounds = async () => await ChpsCompound.find({});
 export const getChpsCompoundById = async (id: string) =>
   await ChpsCompound.findById(id);
