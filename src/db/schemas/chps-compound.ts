@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const chpsCompoundSchema = z.object({
+export const chpsCompoundSchema = z.object({
   name: z.string().min(6),
   location: z.string(),
   district: z.string(),
@@ -9,5 +9,3 @@ const chpsCompoundSchema = z.object({
   availableServices: z.array(z.string()).default([]),
   hasAcceptedTC: z.boolean(),
 });
-
-export { chpsCompoundSchema };

@@ -1,10 +1,6 @@
 import { z } from "zod";
-import {
-  userSchema,
-  roleSchema,
-  staffSchema,
-  loginDataSchema,
-} from "../db/schemas/user";
+import { roleSchema, staffSchema } from "../db/schemas/staff";
+import { userSchema, loginDataSchema } from "../db/schemas/user";
 import { chpsCompoundSchema } from "../db/schemas/chps-compound";
 
 type ChpsData = z.infer<typeof chpsCompoundSchema>;
