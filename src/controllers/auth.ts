@@ -45,7 +45,7 @@ export const login = catchAsync(
     const tokenData = {
       user: user._id.toString(),
       staff: staff._id.toString(),
-      role: role._id.toString(),
+      role: role.type,
     };
     res.json({
       status: STATUSES.SUCCESS,
