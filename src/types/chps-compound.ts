@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { STAFF_ROLES } from "../config/constants";
 import { roleSchema, staffSchema } from "../db/schemas/staff";
 import {
   userSchema,
@@ -14,4 +15,8 @@ export type RoleData = z.infer<typeof roleSchema>;
 export type StaffData = z.infer<typeof staffSchema>;
 export type ResetPasswordData = z.infer<typeof resetPasswordDataSchema>;
 export type ChpsCompundData = ChpsData & Omit<UserData, "chpsCompoundId">;
-export type TokenData = { user: string; staff: string; role: string };
+export type TokenData = {
+  user: string;
+  staff: string;
+  role: (typeof STAFF_ROLES)[number];
+};

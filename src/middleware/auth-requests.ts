@@ -4,7 +4,6 @@ import { authUtil } from "../utils/auth";
 import { StatusCodes } from "http-status-codes";
 import type { TokenData } from "../types/chps-compound";
 import type { Request, Response, NextFunction } from "express";
-import { getRoleByStaffId } from "../db/queries/staff";
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
   const auth = req.headers.authorization;
@@ -37,15 +36,8 @@ export const authorizeUser = catchAsync(
 
 export const authorizeAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id: string = req.params.id || req.body.user;
     const auth = req.auth!;
-
-    const role = await getRoleByStaffId(id);
-    const hasStaffAuth = auth.staff === id;
-    const hasAdminAuth = role && role.type === "Admin";
-    const hasAuth = hasStaffAuth && hasAdminAuth;
-
-    if (hasAuth) return next();
+    if (auth.role === "Admin") return next();
     return next(new AppError("", StatusCodes.UNAUTHORIZED));
   }
 );
