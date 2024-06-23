@@ -4,7 +4,7 @@ import { authUtil } from "../utils/auth";
 import { StatusCodes } from "http-status-codes";
 import type { TokenData } from "../types/chps-compound";
 import type { Request, Response, NextFunction } from "express";
-import { getRoleByStaffId } from "../db/queries/user";
+import { getRoleByStaffId } from "../db/queries/staff";
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
   const auth = req.headers.authorization;

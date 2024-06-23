@@ -1,8 +1,14 @@
-import { createChpsCompound } from "../db/queries/chps-compound";
 import { catchAsync } from "../utils/catch-async";
 import { STATUSES } from "../config/constants";
-import type { Request, Response } from "express";
+import {
+  createChpsCompound,
+  getChpsCompoundById,
+  getAllChpsCompounds,
+} from "../db/queries/chps-compound";
+import type { NextFunction, Request, Response } from "express";
 import type { ChpsCompundData } from "../types/chps-compound";
+import AppError from "../utils/app-error";
+import { StatusCodes } from "http-status-codes";
 
 export const createChps = catchAsync(async (req: Request, res: Response) => {
   const data = req.body as ChpsCompundData;
@@ -10,24 +16,21 @@ export const createChps = catchAsync(async (req: Request, res: Response) => {
   return res.json({ status: STATUSES.SUCCESS, data: response });
 });
 
-// Get user by id
-// exports.getUserById = async (req, res) => {
-//   try {
-//     const user = await User.findById(req.params.id);
-//     if (!user) {
-//       return res
-//         .status(404)
-//         .json({ message: "User not found", success: false });
-//     }
-//     res.status(200).json({
-//       message: "User retrieved successfully",
-//       data: getUser(user),
-//       success: true,
-//     });
-//   } catch (err) {
-//     res.status(500).json({ message: err.message, success: false });
-//   }
-// };
+export const getChpsCompound = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const compound = await getChpsCompoundById(req.params.id);
+    if (!compound) {
+      return next(new AppError("Compound not found", StatusCodes.NOT_FOUND));
+    }
+
+    return res.json({ status: STATUSES.SUCCESS, data: compound });
+  }
+);
+
+export const getChpsCompounds = catchAsync(async (req, res) => {
+  const compounds = await getAllChpsCompounds();
+  res.json({ status: STATUSES, data: compounds });
+});
 
 // Update an existing user
 // exports.updateUser = async (req, res) => {
@@ -64,20 +67,6 @@ export const createChps = catchAsync(async (req: Request, res: Response) => {
 //     res.json({
 //       message: "User deleted successfully",
 //       data: getUser(deletedUser),
-//       success: true,
-//     });
-//   } catch (err) {
-//     res.status(500).json({ message: err.message, success: false });
-//   }
-// };
-
-// Get all users
-// exports.getAllUsers = async (req, res) => {
-//   try {
-//     const users = await User.find({}).select("-password");
-//     res.json({
-//       message: "Users retrieved successfully",
-//       data: users.map((user) => getUser(user)),
 //       success: true,
 //     });
 //   } catch (err) {
