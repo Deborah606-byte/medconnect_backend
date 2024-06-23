@@ -11,4 +11,10 @@ export const chpsCompoundSchema = z.object({
   availableServices: z.array(z.string()).default([]),
   hasAcceptedTC: z.boolean(),
   profilePictureUrl: z.string().default(""),
+  authUserId: z.string(),
+});
+
+export const chpsCompoundParamsSchema = z.object({
+  id: z.string(),
+  user: z.string(),
 });

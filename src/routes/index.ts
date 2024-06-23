@@ -5,14 +5,14 @@ import { chps } from "./chps-compund";
 import { inquiry } from "./inquiry";
 import { patient } from "./patient";
 import { prescription } from "./prescription";
-import { authenticate, authorizeUser } from "../middleware/auth";
+import { authenticate } from "../middleware/auth-requests";
 
 const router = express.Router();
 
 router.use(URLS.auth.root, auth);
-router.use(URLS.chps.root, authenticate, authorizeUser, chps);
-router.use(URLS.patient.root, authenticate, authorizeUser, patient);
-router.use(URLS.inquiry.root, authenticate, authorizeUser, inquiry);
-router.use(URLS.prescription.root, authenticate, authorizeUser, prescription);
+router.use(URLS.chps.root, authenticate, chps);
+router.use(URLS.patient.root, authenticate, patient);
+router.use(URLS.inquiry.root, authenticate, inquiry);
+router.use(URLS.prescription.root, authenticate, prescription);
 
 export const api = router;
