@@ -18,11 +18,11 @@ const router = express.Router();
 
 router.post(
   URLS.chps.all,
-  validateChpsCompoundData,
   authorizeAdmin,
+  validateChpsCompoundData,
   createCompound
 );
-router.use(validateChpsRequestParams, authorizeUser);
+router.use(authorizeUser, validateChpsRequestParams);
 router.get(URLS.chps.one, getCompound);
 router.put(URLS.chps.one, validateChpsUpdateData, updateCompound);
 router.get(URLS.chps.all, authorizeAdmin, getCompounds);

@@ -30,7 +30,7 @@ export const createChpsCompound = async (data: ChpsCompundData) => {
   };
 };
 export const updateChpsCompound = async (id: string, data: ChpsCompundData) =>
-  await ChpsCompound.findByIdAndUpdate(id, data);
+  await ChpsCompound.findByIdAndUpdate(id, data, { new: true });
 export const getAllChpsCompounds = async () => await ChpsCompound.find({});
 export const getChpsCompoundById = async (id: string) =>
   await ChpsCompound.findById(id);

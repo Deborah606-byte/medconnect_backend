@@ -26,7 +26,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 
 export const authorizeUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id: string = req.params.id || req.body.user;
+    const id: string = req.body.user;
     const auth = req.auth!;
 
     if (auth.staff === id) return next();
