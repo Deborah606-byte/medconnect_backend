@@ -5,8 +5,14 @@ import { STATUSES, EMAIL } from "../config/constants";
 import { EmailService } from "../services/mail";
 import { authUtil } from "../utils/auth";
 import { getDefaultStaff, getRoleByStaffId } from "../db/queries/staff";
-import { getUserByEmail, createResetToken } from "../db/queries/user";
-import type { LoginData } from "../types/chps-compound";
+import {
+  getUserByEmail,
+  createResetToken,
+  getResetToken,
+  updateUserPassword,
+  deleteResetToken,
+} from "../db/queries/user";
+import type { LoginData, ResetPasswordData } from "../types/chps-compound";
 import type { Request, Response, NextFunction } from "express";
 
 export const login = catchAsync(
@@ -89,49 +95,28 @@ export const forgotPassword = catchAsync(
   }
 );
 
-// // Reset Password
-// // exports.resetPassword = async (req, res) => {
-// //   const { token, password, email } = req.body;
+export const resetPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { token, password, email } = req.body as ResetPasswordData;
 
-// //   if (!token || !password || !email) {
-// //     return res.status(400).json({
-// //       message: "Token, new password and email are required.",
-// //       success: false,
-// //     });
-// //   }
+    const user = await getUserByEmail(email);
+    if (!user) {
+      const message = "User does not exist";
+      return next(new AppError(message, StatusCodes.BAD_REQUEST));
+    }
 
-// //   try {
-// //     const user = await User.findOne({ email });
-// //     if (!user) {
-// //       return res.status(404).json({
-// //         message: "No account with that email address exists.",
-// //         success: false,
-// //       });
-// //     }
+    const resetToken = await getResetToken(user._id, token);
+    if (!resetToken) {
+      const message = "Invalid or expired token";
+      return next(new AppError(message, StatusCodes.FORBIDDEN));
+    }
 
-// //     const resetToken = await ResetToken.findOne({ user: user._id, token });
-// //     if (!resetToken) {
-// //       return res.status(404).json({
-// //         message: "No account with that email address exists.",
-// //         success: false,
-// //       });
-// //     }
+    await updateUserPassword(user._id.toString(), password);
+    await deleteResetToken(resetToken._id.toString());
 
-// //     const hashedPassword = await hashPassword(password);
-// //     user.password = hashedPassword;
-// //     await user.save();
-
-// //     await ResetToken.deleteOne({ _id: resetToken._id });
-
-// //     res.status(200).json({
-// //       message: "Password has been changed successfully.",
-// //       success: true,
-// //     });
-// //   } catch (error) {
-// //     console.error(error);
-// //     res.status(500).json({
-// //       message: "There was an error processing your request.",
-// //       success: false,
-// //     });
-// //   }
-// // };
+    res.json({
+      status: STATUSES.SUCCESS,
+      message: "Password has been changed successfully.",
+    });
+  }
+);
