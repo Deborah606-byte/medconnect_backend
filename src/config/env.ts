@@ -5,6 +5,10 @@ const EnvSchema = z.object({
   PORT: z.coerce.number(),
   ATLAS_URI: z.string(),
   JWT_SECRET: z.string(),
+  EMAIL_HOST: z.string(),
+  EMAIL_PORT: z.coerce.number(),
+  EMAIL_USER: z.string(),
+  EMAIL_PASSWORD: z.string(),
 });
 
 dotenv.config();
