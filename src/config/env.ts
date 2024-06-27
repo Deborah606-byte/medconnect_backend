@@ -7,7 +7,7 @@ const EnvSchema = z.object({
   JWT_SECRET: z.string(),
   EMAIL_HOST: z.string(),
   EMAIL_PORT: z.coerce.number(),
-  EMAIL_USER: z.string(),
+  EMAIL_USER: z.string().email(),
   EMAIL_PASSWORD: z.string(),
 });
 
@@ -17,7 +17,7 @@ try {
   EnvSchema.parse(process.env);
   console.log("passed");
 } catch (err) {
-  console.log(err);
+  console.log();
   process.exit(1);
 }
 
