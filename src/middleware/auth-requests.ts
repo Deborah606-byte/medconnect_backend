@@ -3,9 +3,14 @@ import { catchAsync } from "../utils/catch-async";
 import { authUtil } from "../utils/auth";
 import { StatusCodes } from "http-status-codes";
 import type { TokenData } from "../types/chps-compound";
-import type { Request, Response, NextFunction } from "express";
+import type { Response, NextFunction } from "express";
+import type { AuthenticatedRequest } from "../types/express";
 
-export function authenticate(req: Request, res: Response, next: NextFunction) {
+export function authenticate(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   const auth = req.headers.authorization;
 
   if (!auth || !auth.startsWith("Bearer ")) {
@@ -25,7 +30,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
 }
 
 export const authorizeUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req, res: Response, next: NextFunction) => {
     const id: string = req.body.user;
     const auth = req.auth!;
 
@@ -35,7 +40,7 @@ export const authorizeUser = catchAsync(
 );
 
 export const authorizeAdmin = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req, res: Response, next: NextFunction) => {
     const auth = req.auth!;
     if (auth.role === "Admin") return next();
     return next(new AppError("", StatusCodes.UNAUTHORIZED));
