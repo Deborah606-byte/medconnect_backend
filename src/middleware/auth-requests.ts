@@ -14,7 +14,7 @@ export function authenticate(
   const auth = req.headers.authorization;
 
   if (!auth || !auth.startsWith("Bearer ")) {
-    return next(new AppError("", StatusCodes.FORBIDDEN));
+    return next(new AppError("Not allowed", StatusCodes.FORBIDDEN));
   }
 
   const token = auth.split(" ")[1];
@@ -35,7 +35,7 @@ export const authorizeUser = catchAsync(
     const auth = req.auth!;
 
     if (auth.staff === id) return next();
-    return next(new AppError("", StatusCodes.UNAUTHORIZED));
+    return next(new AppError("Not allowed", StatusCodes.UNAUTHORIZED));
   }
 );
 
@@ -43,6 +43,6 @@ export const authorizeAdmin = catchAsync(
   async (req, res: Response, next: NextFunction) => {
     const auth = req.auth!;
     if (auth.role === "Admin") return next();
-    return next(new AppError("", StatusCodes.UNAUTHORIZED));
+    return next(new AppError("Not allowed", StatusCodes.UNAUTHORIZED));
   }
 );

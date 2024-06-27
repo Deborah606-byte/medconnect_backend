@@ -11,7 +11,7 @@ type MongooseError = Error & {
   keyValue: Record<string, unknown>;
 };
 
-export default function globalErrorHandler(
+export function globalErrorHandler(
   error: Error | ZodError,
   req: Request,
   res: Response,
