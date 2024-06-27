@@ -7,6 +7,7 @@ import { dbConnect } from "./config/db";
 import { URLS, CORS_OPTIONS } from "./config/constants";
 import { api } from "./routes/index";
 import { rlogger } from "./utils/logger";
+import { globalErrorHandler } from "./middleware/error-handler";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(rlogger);
 app.use(URLS.root, api);
+app.use(globalErrorHandler);
 
 dbConnect().then((status) => {
   if (!status) return process.exit(1);
