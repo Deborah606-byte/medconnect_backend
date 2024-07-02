@@ -42,6 +42,7 @@ export const validateStandardParams = validateParams(standardRequestParams);
 export const validateLoginData = validateData(userSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
 export const validateResetPasswordData = validateData(resetPasswordDataSchema);
+export const validateUpdateAdminData = validateData(adminSchema);
 export const validateAdminData = validateData(
   adminSchema.omit({ authUserId: true })
 );
