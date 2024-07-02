@@ -8,5 +8,5 @@ export const getRoleByStaffId = async (id: string) =>
 
 //Staff
 export const createStaff = async (data: StaffData) => await Staff.create(data);
-export const getDefaultStaff = async (userId: string, email: string) =>
-  await Staff.findOne({ userId, email, staffID: "default_Staff" });
+export const getDefaultStaff = async (userId: string) =>
+  await Staff.findOne({ userId, staffID: "default_Staff" });

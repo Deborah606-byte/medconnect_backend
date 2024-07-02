@@ -1,9 +1,13 @@
 import express from "express";
 import { URLS } from "../config/constants";
-import { authorizeUser, authorizeAdmin } from "../middleware/auth-requests";
+import {
+  authenticate,
+  authorizeUser,
+  authorizeAdmin,
+} from "../middleware/auth-requests";
 import {
   validateAdminData,
-  validateStandardParams,
+  validateUpdateAdminData,
 } from "../middleware/validators";
 import {
   addAdmin,
@@ -11,16 +15,22 @@ import {
   fetchAdmins,
   editAdmin,
   removeAdmin,
+  fetchCurrentAdmin,
 } from "../controllers/admin";
 
 const router = express.Router();
 
-router.use(authorizeUser, authorizeAdmin);
-router.get(URLS.admin.all, fetchAdmins);
-router.post(URLS.admin.all, validateAdminData, addAdmin);
-router.use(validateStandardParams);
-router.get(URLS.admin.one, fetchAdmin);
-router.get(URLS.admin.one, removeAdmin);
-router.get(URLS.admin.one, editAdmin);
+router.get(URLS.admin.me, authenticate, fetchCurrentAdmin);
+router
+  .route(URLS.admin.all)
+  .all(authenticate, authorizeAdmin)
+  .get(fetchAdmins)
+  .post(validateAdminData, addAdmin);
+router
+  .route(URLS.admin.one)
+  .all(authenticate, authorizeUser, authorizeAdmin)
+  .get(fetchAdmin)
+  .put(validateUpdateAdminData, editAdmin)
+  .delete(removeAdmin);
 
 export const admin = router;

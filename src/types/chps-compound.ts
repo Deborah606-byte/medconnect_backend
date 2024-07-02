@@ -16,6 +16,6 @@ export type ResetPasswordData = z.infer<typeof resetPasswordDataSchema>;
 export type ChpsCompundData = ChpsData & UserData;
 export type TokenData = {
   user: string;
-  staff: string;
+  actor: string;
   role: (typeof STAFF_ROLES)[number];
 };

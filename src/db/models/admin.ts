@@ -17,7 +17,7 @@ const admin = new mongoose.Schema(
     },
     profilePictureUrl: {
       type: String,
-      required: true,
+      required: false,
       default: "",
     },
   },

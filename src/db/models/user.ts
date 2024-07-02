@@ -12,6 +12,10 @@ const user = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isSuperAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

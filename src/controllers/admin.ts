@@ -26,10 +26,17 @@ export const fetchAdmin = catchAsync(async (req, res, next) => {
   }
   return res.json({ status: STATUSES.SUCCESS, data: admin });
 });
+export const fetchCurrentAdmin = catchAsync(async (req, res, next) => {
+  const admin = await getAdmin(req.auth!.actor);
+  if (!admin) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+  return res.json({ status: STATUSES.SUCCESS, data: admin });
+});
 
 export const fetchAdmins = catchAsync(async (req, res) => {
   const admins = await getAdmins();
-  return res.json({ status: STATUSES, data: admins });
+  return res.json({ status: STATUSES.SUCCESS, data: admins });
 });
 
 export const editAdmin = catchAsync(async (req, res, next) => {

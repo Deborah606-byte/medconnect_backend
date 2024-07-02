@@ -42,7 +42,10 @@ export const validateStandardParams = validateParams(standardRequestParams);
 export const validateLoginData = validateData(userSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
 export const validateResetPasswordData = validateData(resetPasswordDataSchema);
-export const validateAdminData = validateData(adminSchema);
+export const validateUpdateAdminData = validateData(adminSchema);
+export const validateAdminData = validateData(
+  adminSchema.omit({ authUserId: true })
+);
 export const validateChpsUpdateData = validateData(chpsCompoundSchema);
 export const validateChpsRequestParams = validateParams(
   chpsCompoundParamsSchema
