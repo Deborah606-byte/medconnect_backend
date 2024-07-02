@@ -15,7 +15,6 @@ dotenv.config();
 
 try {
   EnvSchema.parse(process.env);
-  console.log("passed");
 } catch (err) {
   console.log();
   process.exit(1);
