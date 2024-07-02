@@ -8,6 +8,8 @@ export const createAdmin = async (data: CreateAdminData) => {
   return await Admin.create({ name, contact, authUserId: user._id });
 };
 export const getAdmin = async (id: string) => await Admin.findById(id);
+export const getAdminByAuthId = async (id: string) =>
+  await Admin.findOne({ authUserId: id });
 export const getAdmins = async () => await Admin.find({});
 export const deleteAdmin = async (id: string) =>
   await Admin.findByIdAndDelete(id);

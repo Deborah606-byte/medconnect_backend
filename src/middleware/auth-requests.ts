@@ -34,7 +34,7 @@ export const authorizeUser = catchAsync(
     const id: string = req.body.user;
     const auth = req.auth!;
 
-    if (auth.staff === id) return next();
+    if (auth.actor === id) return next();
     return next(new AppError("Not allowed", StatusCodes.UNAUTHORIZED));
   }
 );

@@ -4,7 +4,6 @@ import { StatusCodes } from "http-status-codes";
 import { STATUSES, EMAIL } from "../config/constants";
 import { EmailService } from "../services/mail";
 import { authUtil } from "../utils/auth";
-import { getDefaultStaff, getRoleByStaffId } from "../db/queries/staff";
 import {
   getUserByEmail,
   createResetToken,
@@ -12,6 +11,7 @@ import {
   updateUserPassword,
   deleteResetToken,
 } from "../db/queries/user";
+import { LoginService } from "../services/user";
 import type { LoginData, ResetPasswordData } from "../types/chps-compound";
 import type { Request, Response, NextFunction } from "express";
 
@@ -31,10 +31,11 @@ export const login = catchAsync(
       );
     }
 
-    const staff = await getDefaultStaff(user._id.toString(), email);
-    const role = await getRoleByStaffId(staff?._id?.toString() ?? "");
+    const authId = user._id.toString();
+    const loginService = new LoginService(authId, user.isSuperAdmin);
+    const actor = await loginService.getAuthedActor();
 
-    if (!staff || !role) {
+    if (!actor) {
       return next(
         new AppError(
           "Error, please contact your admin",
@@ -42,22 +43,10 @@ export const login = catchAsync(
         )
       );
     }
-    const tokenData = {
-      user: user._id.toString(),
-      staff: staff._id.toString(),
-      role: role.type,
-    };
+
     res.json({
       status: STATUSES.SUCCESS,
-      data: {
-        auth: {
-          email,
-          id: user._id,
-          role: role.type,
-          token: authUtil.generateToken(tokenData),
-        },
-        staff: staff,
-      },
+      data: { ...actor, auth: { ...actor.auth, email } },
     });
   }
 );
