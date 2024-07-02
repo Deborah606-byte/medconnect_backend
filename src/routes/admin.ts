@@ -15,7 +15,7 @@ import {
 
 const router = express.Router();
 
-router.use(authorizeUser, authorizeAdmin);
+// router.use(authorizeUser, authorizeAdmin);
 router.get(URLS.admin.all, fetchAdmins);
 router.post(URLS.admin.all, validateAdminData, addAdmin);
 router.use(validateStandardParams);

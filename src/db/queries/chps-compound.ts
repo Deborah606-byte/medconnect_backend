@@ -6,7 +6,7 @@ import type { ChpsCompundData, StaffData } from "../../types/chps-compound";
 
 export const createChpsCompound = async (data: ChpsCompundData) => {
   const { name, email, password } = data;
-  const { _id } = await createUser({ email, password });
+  const { _id } = await createUser({ email, password, isSuperAdmin: false });
   const chpsCompound = await ChpsCompound.create({ ...data, authUserId: _id });
 
   const defaultStaffData: StaffData = {
