@@ -3,7 +3,7 @@ import { catchAsync } from "../utils/catch-async";
 import { authUtil } from "../utils/auth";
 import { StatusCodes } from "http-status-codes";
 import type { TokenData } from "../types/chps-compound";
-import type { Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import type { AuthenticatedRequest } from "../types/express";
 
 export function authenticate(
@@ -31,7 +31,7 @@ export function authenticate(
 
 export const authorizeUser = catchAsync(
   async (req, res: Response, next: NextFunction) => {
-    const id: string = req.body.user;
+    const id: string = req.params.user;
     const auth = req.auth!;
 
     if (auth.actor === id) return next();
@@ -42,6 +42,7 @@ export const authorizeUser = catchAsync(
 export const authorizeAdmin = catchAsync(
   async (req, res: Response, next: NextFunction) => {
     const auth = req.auth!;
+
     if (auth.role === "Admin") return next();
     return next(new AppError("Not allowed", StatusCodes.UNAUTHORIZED));
   }

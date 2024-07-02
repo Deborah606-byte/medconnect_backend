@@ -32,9 +32,16 @@ export function globalErrorHandler(
     error = formatMongooseError(err);
   }
 
+  if (error.name == "CastError") {
+    const message = "Resource not found";
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ status: STATUSES.FAILED, message });
+  }
+
   if (error instanceof AppError) {
     const { status, statusCode, message } = error;
-    logger.error({ type: "dbError", error: message });
+    logger.error({ type: "AppError", error: message });
     return res.status(statusCode).json({ status, message });
   }
 

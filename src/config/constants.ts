@@ -35,6 +35,7 @@ export const URLS = {
     root: "/admin",
     all: "/",
     one: "/:user/:id",
+    me: "/me",
   },
 };
 
