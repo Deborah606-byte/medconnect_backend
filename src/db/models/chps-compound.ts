@@ -33,6 +33,11 @@ const chpsCompound = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  createdById: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Admin",
+    required: true,
+  },
 });
 
 export const ChpsCompound = mongoose.model("ChpsCompound", chpsCompound);

@@ -34,7 +34,7 @@ export const authorizeUser = catchAsync(
     const id: string = req.params.user;
     const auth = req.auth!;
 
-    if (auth.actor === id) return next();
+    if (auth.actor === id || auth.role === "Admin") return next();
     return next(new AppError("Not allowed", StatusCodes.UNAUTHORIZED));
   }
 );
