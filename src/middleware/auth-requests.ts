@@ -3,10 +3,10 @@ import { catchAsync } from "../utils/catch-async";
 import { authUtil } from "../utils/auth";
 import { StatusCodes } from "http-status-codes";
 import type { TokenData } from "../types/chps-compound";
-import type { Request, Response, NextFunction } from "express";
+import type { Response, NextFunction } from "express";
 import type { AuthenticatedRequest } from "../types/express";
 
-export function authenticate(
+export function authorize(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
@@ -14,7 +14,7 @@ export function authenticate(
   const auth = req.headers.authorization;
 
   if (!auth || !auth.startsWith("Bearer ")) {
-    return next(new AppError("Not allowed", StatusCodes.FORBIDDEN));
+    return next(new AppError("Not allowed", StatusCodes.UNAUTHORIZED));
   }
 
   const token = auth.split(" ")[1];
@@ -28,16 +28,6 @@ export function authenticate(
   req.auth = data as TokenData;
   return next();
 }
-
-export const authorizeUser = catchAsync(
-  async (req, res: Response, next: NextFunction) => {
-    const id: string = req.params.user;
-    const auth = req.auth!;
-
-    if (auth.actor === id || auth.role === "Admin") return next();
-    return next(new AppError("Not allowed", StatusCodes.UNAUTHORIZED));
-  }
-);
 
 export const authorizeAdmin = catchAsync(
   async (req, res: Response, next: NextFunction) => {
