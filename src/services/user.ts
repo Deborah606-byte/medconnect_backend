@@ -12,24 +12,23 @@ class LoginService {
     this.isAdminUser = isAdmin;
   }
 
-  private async loginSuperAdmin(id: string) {
-    const admin = await getAdminByAuthId(id);
+  private loginSuperAdmin = async () => {
+    const admin = await getAdminByAuthId(this.authId);
     if (!admin) return null;
     return { actor: admin, role: STAFF_ROLES[0] };
-  }
+  };
 
-  private async loginStaff(id: string) {
-    const staff = await getDefaultStaff(id);
+  private loginStaff = async () => {
+    const staff = await getDefaultStaff(this.authId);
     const role = await getRoleByStaffId(staff?._id?.toString() ?? "");
 
     if (!staff || !role) return null;
     return { actor: staff, role: role.type };
-  }
+  };
 
   public async getAuthedActor() {
     const method = this.isAdminUser ? this.loginSuperAdmin : this.loginStaff;
-    console.log({ isAdmin: this.isAdminUser });
-    const loginResponse = await method(this.authId);
+    const loginResponse = await method();
     if (loginResponse === null) return null;
 
     const { actor, role } = loginResponse;

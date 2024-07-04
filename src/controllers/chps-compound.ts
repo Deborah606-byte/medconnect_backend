@@ -28,7 +28,7 @@ export const getCompound = catchAsync(async (req, res, next) => {
 
 export const getCompounds = catchAsync(async (req, res) => {
   const compounds = await getAllChpsCompounds();
-  res.json({ status: STATUSES, data: compounds });
+  res.json({ status: STATUSES.SUCCESS, data: compounds });
 });
 
 export const updateCompound = catchAsync(async (req, res, next) => {
@@ -39,7 +39,7 @@ export const updateCompound = catchAsync(async (req, res, next) => {
   if (!updatedCompound) {
     return next(new AppError("Not found", StatusCodes.NOT_FOUND));
   }
-  res.json({ status: STATUSES, data: updatedCompound });
+  res.json({ status: STATUSES.SUCCESS, data: updatedCompound });
 });
 
 export const deleteCompound = catchAsync(async (req, res, next) => {
@@ -48,6 +48,6 @@ export const deleteCompound = catchAsync(async (req, res, next) => {
     return next(new AppError("Not found", StatusCodes.NOT_FOUND));
   }
 
-  await deleteChpsCompound(compound._id);
+  // await deleteChpsCompound(compound._id);
   return res.status(204).json({ status: STATUSES.SUCCESS });
 });

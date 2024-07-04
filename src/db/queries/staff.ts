@@ -1,4 +1,5 @@
 import { Staff, Role } from "../models/staff";
+import { getChpsCompoundByAuthId } from "./chps-compound";
 import type { StaffData, RoleData } from "../../types/chps-compound";
 
 //Roles
@@ -8,5 +9,10 @@ export const getRoleByStaffId = async (id: string) =>
 
 //Staff
 export const createStaff = async (data: StaffData) => await Staff.create(data);
-export const getDefaultStaff = async (userId: string) =>
-  await Staff.findOne({ userId, staffID: "default_Staff" });
+export const getDefaultStaff = async (userId: string) => {
+  const chps = await getChpsCompoundByAuthId(userId);
+  return await Staff.findOne({
+    chpsCompoundId: chps?._id,
+    staffID: "default_Staff",
+  });
+};
