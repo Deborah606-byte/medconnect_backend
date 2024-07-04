@@ -11,7 +11,7 @@ import {
   validateChpsCompoundData,
   validateChpsUpdateData,
 } from "../middleware/validators";
-import { authorizeAdmin, authorizeUser } from "../middleware/auth-requests";
+import { authorizeAdmin } from "../middleware/auth-requests";
 
 const router = express.Router();
 
@@ -23,10 +23,8 @@ router
 
 router
   .route(URLS.chps.one)
-  .all(authorizeUser)
   .get(getCompound)
-  .put(validateChpsUpdateData, updateCompound);
-
-router.delete(URLS.chps.one, authorizeAdmin, deleteCompound);
+  .put(validateChpsUpdateData, updateCompound)
+  .delete(authorizeAdmin, deleteCompound);
 
 export const chps = router;
