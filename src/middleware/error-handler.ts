@@ -9,6 +9,7 @@ import type { Request, Response, NextFunction } from "express";
 type MongooseError = Error & {
   code?: number;
   keyValue: Record<string, unknown>;
+  path: string;
 };
 
 export function globalErrorHandler(
@@ -27,15 +28,20 @@ export function globalErrorHandler(
       .json({ status: STATUSES.FAILED, message });
   }
 
-  if (error.name == "MongoServerError") {
+  if (error.name === "MongoServerError") {
     const err = error as MongooseError;
     error = formatMongooseError(err);
   }
 
-  if (error.name == "CastError") {
-    const message = "Resource not found";
+  if (error.name === "CastError" || error.name === "ValidationError") {
+    const err = error as MongooseError;
+    const key = err.message.split(": ")[1] ?? err.path;
+    const message = `Invalid type provided: ${key}`;
+
+    logger.error({ type: "DbError", error });
+
     return res
-      .status(StatusCodes.NOT_FOUND)
+      .status(StatusCodes.BAD_REQUEST)
       .json({ status: STATUSES.FAILED, message });
   }
 
@@ -45,11 +51,11 @@ export function globalErrorHandler(
     return res.status(statusCode).json({ status, message });
   }
 
-  logger.error({ type: "SystemError", error: error.message });
+  logger.error({ type: "SystemError", error: error });
 
   return res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ status: STATUSES.FAILED, message: "Internal Server Error" });
+    .json({ status: STATUSES.FAILED, message: "Something went wrong" });
 }
 
 function formatMongooseError(error: MongooseError) {

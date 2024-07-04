@@ -34,5 +34,7 @@ export const updateChpsCompound = async (id: string, data: ChpsCompundData) =>
 export const getAllChpsCompounds = async () => await ChpsCompound.find({});
 export const getChpsCompoundById = async (id: string) =>
   await ChpsCompound.findById(id);
+export const getChpsCompoundByAuthId = async (id: string) =>
+  await ChpsCompound.findOne({ authUserId: id });
 export const deleteChpsCompound = async (id: ObjectId) =>
   await ChpsCompound.findByIdAndDelete(id);
