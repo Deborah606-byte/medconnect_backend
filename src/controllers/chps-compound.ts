@@ -48,6 +48,6 @@ export const deleteCompound = catchAsync(async (req, res, next) => {
     return next(new AppError("Not found", StatusCodes.NOT_FOUND));
   }
 
-  // await deleteChpsCompound(compound._id);
+  await deleteChpsCompound(compound._id);
   return res.status(204).json({ status: STATUSES.SUCCESS });
 });
