@@ -34,15 +34,22 @@ export const getStaff = catchAsync(async (req, res, next) => {
   return res.json({ status: STATUSES.SUCCESS, data: staff });
 });
 
-export const updateStaff = catchAsync(async (req, res) => {
+export const updateStaff = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const data = req.body;
   const updatedStaff = await editStaff(id, data);
 
+  if (!updatedStaff) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+
   return res.json({ status: STATUSES.SUCCESS, data: updatedStaff });
 });
 
-export const deleteStaff = catchAsync(async (req, res) => {
-  await removeStaff(req.params.id);
+export const deleteStaff = catchAsync(async (req, res, next) => {
+  const staff = await removeStaff(req.params.id);
+  if (!staff) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
   return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
 });
