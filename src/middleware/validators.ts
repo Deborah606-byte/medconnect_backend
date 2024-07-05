@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { adminSchema } from "../db/schemas/admin";
+import { staffSchema } from "../db/schemas/staff";
 import {
   chpsCompoundSchema,
   chpsCompoundParamsSchema,
@@ -42,6 +43,10 @@ export const validateStandardParams = validateParams(standardRequestParams);
 export const validateLoginData = validateData(userSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
 export const validateResetPasswordData = validateData(resetPasswordDataSchema);
+export const validateStaffData = validateData(staffSchema);
+export const validateUpdateStaffData = validateData(
+  staffSchema.merge(z.object({ staffId: z.string() }))
+);
 export const validateUpdateAdminData = validateData(adminSchema);
 export const validateAdminData = validateData(
   adminSchema.omit({ authUserId: true })

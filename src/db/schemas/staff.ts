@@ -7,7 +7,6 @@ export const roleSchema = z.object({
 });
 
 export const staffSchema = z.object({
-  staffID: z.string(),
   fullName: z.string(),
   dateOfBirth: z.string(),
   dateOfHire: z.string(),
