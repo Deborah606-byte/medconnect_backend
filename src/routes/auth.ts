@@ -1,6 +1,6 @@
 import express from "express";
 import { URLS } from "../config/constants";
-import { authenticate } from "../middleware/auth-requests";
+import { authorize } from "../middleware/auth-requests";
 import {
   validateLoginData,
   validateForgotPasswordData,
@@ -16,7 +16,7 @@ import {
 const router = express.Router();
 
 router.post(URLS.auth.login, validateLoginData, login);
-router.post(URLS.auth.logout, authenticate, logout);
+router.post(URLS.auth.logout, authorize, logout);
 router.post(URLS.auth.resetPassword, validateResetPasswordData, resetPassword);
 router.post(
   URLS.auth.forgotPassword,
