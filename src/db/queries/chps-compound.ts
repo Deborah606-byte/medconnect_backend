@@ -9,12 +9,12 @@ export const createChpsCompound = async (data: ChpsCompundData) => {
   const { _id } = await createUser({ email, password, isSuperAdmin: false });
   const chpsCompound = await ChpsCompound.create({ ...data, authUserId: _id });
 
-  const defaultStaffData: StaffData = {
+  const defaultStaffData: StaffData & { staffId: string } = {
     email,
     fullName: name,
     contact: data.contact,
     gender: "Other",
-    staffID: "default_Staff",
+    staffId: "default_Staff",
     position: "Staff",
     workSchedule: [],
     dateOfBirth: new Date().toISOString(),

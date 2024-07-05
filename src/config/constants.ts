@@ -19,8 +19,8 @@ export const CORS_OPTIONS = {
 
 export const URLS = {
   root: "/api",
-  chps: { root: "/chps-compound", all: "/", one: "/:user/:id" },
-  staff: { root: "/staff", all: "/", one: "/" },
+  chps: { root: "/chps-compound", all: "/", one: "/:id" },
+  staff: { root: "/staff", all: "/", one: "/:id" },
   patient: { root: "/patients", all: "/", one: "/:id" },
   inquiry: { root: "inquiries", submit: "/submit-inquiry" },
   prescription: { root: "/prescriptions", all: "/", one: "/:id" },
@@ -34,7 +34,7 @@ export const URLS = {
   admin: {
     root: "/admin",
     all: "/",
-    one: "/:user/:id",
+    one: "/:id",
     me: "/me",
   },
 };

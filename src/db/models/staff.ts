@@ -21,10 +21,11 @@ const role = new mongoose.Schema({
 
 const staff = new mongoose.Schema(
   {
-    staffID: requiredString,
+    staffId: requiredString,
     fullName: requiredString,
     dateOfBirth: requiredString,
     dateOfHire: requiredString,
+    contact: requiredString,
     position: requiredString,
     email: {
       ...requiredString,
@@ -44,6 +45,21 @@ const staff = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+staff.pre("validate", async function (next) {
+  if (!this.staffId) {
+    try {
+      const staffCount = await mongoose.model("Staff").countDocuments();
+      const index = `${staffCount + 1}`.padStart(5, "0");
+      this.staffId = "MCS" + index;
+      next();
+    } catch (err) {
+      next(err as Error);
+    }
+  } else {
+    next();
+  }
+});
 
 export const Role = mongoose.model("Role", role);
 export const Staff = mongoose.model("Staff", staff);

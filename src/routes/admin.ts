@@ -1,10 +1,6 @@
 import express from "express";
 import { URLS } from "../config/constants";
-import {
-  authenticate,
-  authorizeUser,
-  authorizeAdmin,
-} from "../middleware/auth-requests";
+import { authorize, authorizeAdmin } from "../middleware/auth-requests";
 import {
   validateAdminData,
   validateUpdateAdminData,
@@ -20,15 +16,15 @@ import {
 
 const router = express.Router();
 
-router.get(URLS.admin.me, authenticate, fetchCurrentAdmin);
+router.get(URLS.admin.me, fetchCurrentAdmin);
 router
   .route(URLS.admin.all)
-  .all(authenticate, authorizeAdmin)
+  .all(authorizeAdmin)
   .get(fetchAdmins)
   .post(validateAdminData, addAdmin);
 router
   .route(URLS.admin.one)
-  .all(authenticate, authorizeUser, authorizeAdmin)
+  .all(authorizeAdmin)
   .get(fetchAdmin)
   .put(validateUpdateAdminData, editAdmin)
   .delete(removeAdmin);

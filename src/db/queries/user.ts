@@ -8,6 +8,7 @@ export const createUser = async (data: UserData) => {
   const hashedPassword = await authUtil.generateHashedPassword(data.password);
   return await User.create({ ...data, password: hashedPassword });
 };
+export const getUserById = async (id: string) => await User.findById(id);
 export const getUserByEmail = async (email: string) => {
   return await User.findOne({ email });
 };
