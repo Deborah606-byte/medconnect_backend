@@ -1,21 +1,15 @@
-// routes/patientRoutes.js
 import express from "express";
 import { URLS } from "../config/constants";
-
-// const {
-//   getAllPatients,
-//   getPatientById,
-//   createPatient,
-//   updatePatient,
-//   deletePatient,
-// } = require("../controllers/patient");
+import { validatePatientData } from "../middleware/validators";
+import { addPatient, getAllPatients } from "../controllers/patient";
+import { authorizeAdmin } from "../middleware/auth-requests";
 
 const router = express.Router();
 
-// router.get(URLS.patient.all, getAllPatients);
-// router.post(URLS.patient.all, createPatient);
-// router.get(URLS.patient.one, getPatientById);
-// router.put(URLS.patient.one, updatePatient);
-// router.delete(URLS.patient.one, deletePatient);
+router
+  .route(URLS.patient.all)
+  .all(authorizeAdmin)
+  .post(validatePatientData, addPatient)
+  .get(getAllPatients);
 
 export const patient = router;

@@ -7,6 +7,13 @@ const LOGS_DIR = path.join(__dirname, "..", "..", "logs");
 export const APP_LOG = path.join(LOGS_DIR, "app.log");
 export const REQUEST_LOG = path.join(LOGS_DIR, "request.log");
 export const STAFF_ROLES = ["Admin", "Staff"] as const;
+export const GENDERS = ["Male", "Female", "Other"] as const;
+export const MARITAL_STATUSES = [
+  "Single",
+  "Married",
+  "Divorced",
+  "Widowed",
+] as const;
 export const STATUSES = {
   SUCCESS: true,
   FAILED: false,
@@ -20,8 +27,13 @@ export const CORS_OPTIONS = {
 export const URLS = {
   root: "/api",
   chps: { root: "/chps-compound", all: "/", one: "/:id" },
-  staff: { root: "/staff", all: "/", one: "/:id" },
-  patient: { root: "/patients", all: "/", one: "/:id" },
+  staff: {
+    root: "/staff",
+    all: "/",
+    one: "/:id",
+    role: "/role",
+  },
+  patient: { root: "/patient", all: "/", one: "/:id" },
   inquiry: { root: "inquiries", submit: "/submit-inquiry" },
   prescription: { root: "/prescriptions", all: "/", one: "/:id" },
   auth: {
@@ -30,6 +42,7 @@ export const URLS = {
     logout: "/logout",
     resetPassword: "/reset-password",
     forgotPassword: "/forgot-password",
+    switch: "/switch-staff/:id",
   },
   admin: {
     root: "/admin",

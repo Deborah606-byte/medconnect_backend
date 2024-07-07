@@ -11,6 +11,7 @@ import {
   logout,
   forgotPassword,
   resetPassword,
+  getStaffAuth,
 } from "../controllers/auth";
 
 const router = express.Router();
@@ -23,5 +24,6 @@ router.post(
   validateForgotPasswordData,
   forgotPassword
 );
+router.get(URLS.auth.switch, authorize, getStaffAuth);
 
 export const auth = router;

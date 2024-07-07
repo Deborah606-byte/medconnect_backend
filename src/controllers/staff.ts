@@ -8,6 +8,7 @@ import {
   getStaffById,
   editStaff,
   removeStaff,
+  updateRole,
 } from "../db/queries/staff";
 import type { StaffData } from "../types/chps-compound";
 
@@ -52,4 +53,15 @@ export const deleteStaff = catchAsync(async (req, res, next) => {
     return next(new AppError("Not found", StatusCodes.NOT_FOUND));
   }
   return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
+});
+
+export const editRole = catchAsync(async (req, res, next) => {
+  const data = req.body;
+  const updatedRole = await updateRole(data);
+
+  if (!updatedRole) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+
+  return res.json({ status: STATUSES.SUCCESS, data: updatedRole });
 });

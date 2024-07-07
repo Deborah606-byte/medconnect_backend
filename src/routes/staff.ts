@@ -6,8 +6,10 @@ import {
   getStaff,
   updateStaff,
   deleteStaff,
+  editRole,
 } from "../controllers/staff";
 import {
+  validateRoleData,
   validateStaffData,
   validateUpdateStaffData,
 } from "../middleware/validators";
@@ -26,5 +28,7 @@ router
   .get(getStaff)
   .delete(deleteStaff)
   .put(validateUpdateStaffData, updateStaff);
+
+router.patch(URLS.staff.role, authorizeAdmin, validateRoleData, editRole);
 
 export const staff = router;
