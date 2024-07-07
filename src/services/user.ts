@@ -1,7 +1,12 @@
 import { getAdminByAuthId } from "../db/queries/admin";
-import { getDefaultStaff, getRoleByStaffId } from "../db/queries/staff";
+import {
+  getDefaultStaff,
+  getRoleByStaffId,
+  getStaffById,
+} from "../db/queries/staff";
 import { STAFF_ROLES } from "../config/constants";
 import { authUtil } from "../utils/auth";
+import type { Document } from "mongoose";
 
 class LoginService {
   private authId: string;
@@ -23,7 +28,24 @@ class LoginService {
     const role = await getRoleByStaffId(staff?._id?.toString() ?? "");
 
     if (!staff || !role) return null;
+    console.log({ actor: staff._id.toString(), role: role.type });
+
     return { actor: staff, role: role.type };
+  };
+
+  private formatResponse = async (res: {
+    actor: Document;
+    role: (typeof STAFF_ROLES)[number];
+  }) => {
+    const { actor, role } = res;
+    const token = authUtil.generateToken({
+      user: this.authId,
+      actor: actor._id as string,
+      role: role,
+    });
+
+    const userType = this.isAdminUser ? "admin" : "staff";
+    return { auth: { id: this.authId, role, token }, [userType]: actor };
   };
 
   public async getAuthedActor() {
@@ -31,15 +53,15 @@ class LoginService {
     const loginResponse = await method();
     if (loginResponse === null) return null;
 
-    const { actor, role } = loginResponse;
-    const token = authUtil.generateToken({
-      user: this.authId,
-      actor: actor._id.toString(),
-      role: role,
-    });
-    const userType = this.isAdminUser ? "admin" : "staff";
+    return this.formatResponse(loginResponse);
+  }
 
-    return { auth: { id: this.authId, role, token }, [userType]: actor };
+  public async authStaff(staffId: string) {
+    const staff = await getStaffById(staffId);
+    const role = await getRoleByStaffId(staff?._id?.toString() ?? "");
+
+    if (!staff || !role) return null;
+    return this.formatResponse({ actor: staff, role: role.type });
   }
 }
 

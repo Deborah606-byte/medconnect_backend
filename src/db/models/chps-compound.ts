@@ -40,4 +40,17 @@ const chpsCompound = new mongoose.Schema({
   },
 });
 
+chpsCompound.methods.getInitials = function (): string {
+  const words = this.name.split(" ");
+  let initials = "";
+  if (words.length === 1) {
+    const word = words[0];
+    initials = word.charAt(0) + word.charAt(word.length - 1);
+  } else {
+    initials = words[0].charAt(0) + words[1].charAt(0);
+  }
+
+  return initials.toUpperCase();
+};
+
 export const ChpsCompound = mongoose.model("ChpsCompound", chpsCompound);

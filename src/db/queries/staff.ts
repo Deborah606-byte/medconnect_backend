@@ -7,10 +7,16 @@ import type { StaffData, RoleData } from "../../types/chps-compound";
 export const createRole = async (data: RoleData) => await Role.create(data);
 export const getRoleByStaffId = async (id: string) =>
   await Role.findOne({ staffId: id });
+export const updateRole = async (data: RoleData) =>
+  await Role.findOneAndUpdate({ staffId: data.staffId }, data, { new: true });
 
 //Staff
 export const getStaffById = async (id: string) => await Staff.findById(id);
-export const createStaff = async (data: StaffData) => await Staff.create(data);
+export const createStaff = async (data: StaffData) => {
+  const staff = await Staff.create(data);
+  await createRole({ type: "Staff", staffId: staff._id.toString() });
+  return staff;
+};
 export const removeStaff = async (id: string) =>
   await Staff.findByIdAndDelete(id);
 export const editStaff = async (id: string, data: StaffData) =>
