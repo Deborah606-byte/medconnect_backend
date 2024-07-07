@@ -5,8 +5,8 @@ import { StatusCodes } from "http-status-codes";
 import {
   createStaff,
   getStaffs,
-  getStaffById,
   editStaff,
+  getChpsStaff,
   removeStaff,
   updateRole,
 } from "../db/queries/staff";
@@ -24,8 +24,8 @@ export const getAllStaff = catchAsync(async (req, res) => {
 });
 
 export const getStaff = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const staff = await getStaffById(id);
+  const { id: chpsId, sid: staffId } = req.params;
+  const staff = await getChpsStaff(chpsId, staffId);
 
   if (!staff) {
     const error = new AppError("Staff not found", StatusCodes.NOT_FOUND);
@@ -36,9 +36,9 @@ export const getStaff = catchAsync(async (req, res, next) => {
 });
 
 export const updateStaff = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
+  const { id: chpsId, sid: staffId } = req.params;
   const data = req.body;
-  const updatedStaff = await editStaff(id, data);
+  const updatedStaff = await editStaff(chpsId, staffId, data);
 
   if (!updatedStaff) {
     return next(new AppError("Not found", StatusCodes.NOT_FOUND));
@@ -48,7 +48,8 @@ export const updateStaff = catchAsync(async (req, res, next) => {
 });
 
 export const deleteStaff = catchAsync(async (req, res, next) => {
-  const staff = await removeStaff(req.params.id);
+  const { id: chpsId, sid: staffId } = req.params;
+  const staff = await removeStaff(chpsId, staffId);
   if (!staff) {
     return next(new AppError("Not found", StatusCodes.NOT_FOUND));
   }

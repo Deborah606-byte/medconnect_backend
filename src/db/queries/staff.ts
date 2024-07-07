@@ -12,15 +12,19 @@ export const updateRole = async (data: RoleData) =>
 
 //Staff
 export const getStaffById = async (id: string) => await Staff.findById(id);
+export const getChpsStaff = async (cid: string, id: string) =>
+  await Staff.find({ chpsCompoundId: cid, _id: id });
 export const createStaff = async (data: StaffData) => {
   const staff = await Staff.create(data);
   await createRole({ type: "Staff", staffId: staff._id.toString() });
   return staff;
 };
-export const removeStaff = async (id: string) =>
-  await Staff.findByIdAndDelete(id);
-export const editStaff = async (id: string, data: StaffData) =>
-  await Staff.findByIdAndUpdate(id, data, { new: true });
+export const removeStaff = async (cid: string, id: string) =>
+  await Staff.findOneAndDelete({ chpsCompoundId: cid, _id: id });
+export const editStaff = async (cid: string, id: string, data: StaffData) =>
+  await Staff.findOneAndUpdate({ chpsCompoundId: cid, _id: id }, data, {
+    new: true,
+  });
 export const getDefaultStaff = async (userId: string) => {
   const chps = await getChpsCompoundByAuthId(userId);
   return await Staff.findOne({

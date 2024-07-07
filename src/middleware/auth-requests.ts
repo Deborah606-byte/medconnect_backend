@@ -33,8 +33,6 @@ export const authorizeAdmin = catchAsync(
   async (req, res: Response, next: NextFunction) => {
     const auth = req.auth!;
 
-    console.log({ auth });
-
     if (auth.role === "Admin") return next();
     return next(new AppError("Not allowed", StatusCodes.UNAUTHORIZED));
   }
