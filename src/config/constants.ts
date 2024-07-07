@@ -33,7 +33,11 @@ export const URLS = {
     one: "/:id",
     role: "/role",
   },
-  patient: { root: "/patient", all: "/", one: "/:id" },
+  patient: {
+    root: "/patient",
+    all: "/",
+    chps: { all: "/:id/", one: "/:id/:pid" },
+  },
   inquiry: { root: "inquiries", submit: "/submit-inquiry" },
   prescription: { root: "/prescriptions", all: "/", one: "/:id" },
   auth: {
