@@ -30,8 +30,9 @@ export const URLS = {
   staff: {
     root: "/staff",
     all: "/",
-    one: "/:id",
+    one: "/:id/all",
     role: "/role",
+    chps: { all: "/:id", one: "/:id/:sid" },
   },
   patient: {
     root: "/patient",
