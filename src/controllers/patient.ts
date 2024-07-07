@@ -2,10 +2,18 @@ import AppError from "../utils/app-error";
 import { catchAsync } from "../utils/catch-async";
 import { STATUSES } from "../config/constants";
 import { StatusCodes } from "http-status-codes";
-import { createPatient, fetchAllPatients } from "../db/queries/patient";
+import {
+  createPatient,
+  fetchAllPatients,
+  fetchPatientsByChpsId,
+  fetchChpsPatient,
+  deleteChpsPatient,
+  updateChpsPatient,
+} from "../db/queries/patient";
+import type { PatientData } from "../types/staff";
 
 export const addPatient = catchAsync(async (req, res) => {
-  const data = req.body;
+  const data = req.body as PatientData;
   const patient = await createPatient(data);
 
   return res
@@ -19,86 +27,33 @@ export const getAllPatients = catchAsync(async (req, res) => {
   return res.json({ status: STATUSES.SUCCESS, data: patients });
 });
 
-// // Get patient by id
-// exports.getPatientById = async (req, res) => {
-//   try {
-//     const patient = await Patient.findById(req.params.id).populate(
-//       "emergencyContact",
-//       "name relationship contactNumber"
-//     );
+export const getChpsPatients = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const patients = await fetchPatientsByChpsId(id);
+  return res.json({ status: STATUSES.SUCCESS, data: patients });
+});
 
-//     if (!patient) {
-//       return res
-//         .status(404)
-//         .json({ message: "Patient not found", success: false });
-//     }
+export const getChpsPatient = catchAsync(async (req, res, next) => {
+  const { id: chpsId, pid: patientId } = req.params;
+  const patient = await fetchChpsPatient(chpsId, patientId);
 
-//     // check if the patient belongs to the chips compound (user)
-//     if (patient.compoundId?.toString() !== req.user.userId) {
-//       return res
-//         .status(403)
-//         .json({ message: "Forbidden, access denied", success: false });
-//     }
+  if (!patient) return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  return res.json({ status: STATUSES.SUCCESS, data: patient });
+});
 
-//     res.status(200).json({
-//       message: "Patient successfully fetched",
-//       data: patient,
-//       success: true,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res
-//       .status(500)
-//       .json({ message: "An unexpected error has occurred", success: false });
-//   }
-// };
+export const removeChpsPatient = catchAsync(async (req, res, next) => {
+  const { id: chpsId, pid: patientId } = req.params;
+  const patient = await deleteChpsPatient(chpsId, patientId);
 
-// // Update an existing patient
-// exports.updatePatient = async (req, res) => {
-//   try {
-//     const updatedPatient = await Patient.findByIdAndUpdate(
-//       req.params.id,
-//       req.body,
-//       { new: true }
-//     ).populate("emergencyContact", "name relationship contactNumber");
+  if (!patient) return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
+});
 
-//     if (!updatedPatient) {
-//       return res
-//         .status(404)
-//         .json({ message: "Patient not found", success: false });
-//     }
+export const editChpsPatient = catchAsync(async (req, res, next) => {
+  const { id: chpsId, pid: patientId } = req.params;
+  const data = req.body as PatientData;
+  const patient = await updateChpsPatient(chpsId, patientId, data);
 
-//     res.json({
-//       message: "Patient information updated successfully",
-//       data: updatedPatient,
-//       success: true,
-//     });
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .json({ message: "An unexpected error has occurred", success: false });
-//   }
-// };
-
-// // Delete an existing patient
-// exports.deletePatient = async (req, res) => {
-//   try {
-//     const deletedPatient = await Patient.findByIdAndDelete(req.params.id);
-
-//     if (!deletedPatient) {
-//       return res
-//         .status(404)
-//         .json({ message: "Patient not found", success: false });
-//     }
-
-//     res.json({
-//       message: "Patient details deleted successfully",
-//       data: deletedPatient,
-//       success: true,
-//     });
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .json({ message: "An unexpected error has occurred", success: false });
-//   }
-// };
+  if (!patient) return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
+});
