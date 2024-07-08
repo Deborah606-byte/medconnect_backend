@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { adminSchema } from "../db/schemas/admin";
-import { staffSchema } from "../db/schemas/staff";
+import { staffSchema, roleSchema } from "../db/schemas/staff";
 import {
   chpsCompoundSchema,
   chpsCompoundParamsSchema,
@@ -11,6 +11,7 @@ import {
   resetPasswordDataSchema,
 } from "../db/schemas/user";
 import type { Request, Response, NextFunction } from "express";
+import { patientSchema } from "../db/schemas/patient";
 
 function validateData(schema: z.ZodObject<any, any>) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -44,6 +45,7 @@ export const validateLoginData = validateData(userSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
 export const validateResetPasswordData = validateData(resetPasswordDataSchema);
 export const validateStaffData = validateData(staffSchema);
+export const validateRoleData = validateData(roleSchema);
 export const validateUpdateStaffData = validateData(
   staffSchema.merge(z.object({ staffId: z.string() }))
 );
@@ -58,3 +60,6 @@ export const validateChpsRequestParams = validateParams(
 export const validateChpsCompoundData = validateData(
   chpsCompoundSchema.omit({ authUserId: true }).merge(userSchema)
 );
+
+// Patient
+export const validatePatientData = validateData(patientSchema);

@@ -1,21 +1,27 @@
-// routes/patientRoutes.js
 import express from "express";
 import { URLS } from "../config/constants";
-
-// const {
-//   getAllPatients,
-//   getPatientById,
-//   createPatient,
-//   updatePatient,
-//   deletePatient,
-// } = require("../controllers/patient");
+import { validatePatientData } from "../middleware/validators";
+import {
+  addPatient,
+  getAllPatients,
+  getChpsPatients,
+  getChpsPatient,
+  editChpsPatient,
+  removeChpsPatient,
+} from "../controllers/patient";
+import { authorizeAdmin } from "../middleware/auth-requests";
 
 const router = express.Router();
 
-// router.get(URLS.patient.all, getAllPatients);
-// router.post(URLS.patient.all, createPatient);
-// router.get(URLS.patient.one, getPatientById);
-// router.put(URLS.patient.one, updatePatient);
-// router.delete(URLS.patient.one, deletePatient);
+router.route(URLS.patient.all).all(authorizeAdmin).get(getAllPatients);
+router
+  .route(URLS.patient.chps.all)
+  .get(getChpsPatients)
+  .post(validatePatientData, addPatient);
+router
+  .route(URLS.patient.chps.one)
+  .get(getChpsPatient)
+  .delete(removeChpsPatient)
+  .patch(validatePatientData, editChpsPatient);
 
 export const patient = router;
