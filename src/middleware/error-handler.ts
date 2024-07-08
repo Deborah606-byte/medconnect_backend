@@ -51,7 +51,7 @@ export function globalErrorHandler(
     return res.status(statusCode).json({ status, message });
   }
 
-  logger.error({ type: "SystemError", error: error });
+  logger.error({ type: "SystemError", error });
 
   return res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)

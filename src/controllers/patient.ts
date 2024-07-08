@@ -13,7 +13,8 @@ import {
 import type { PatientData } from "../types/staff";
 
 export const addPatient = catchAsync(async (req, res) => {
-  const data = req.body as PatientData;
+  const { id: chpsCompoundId } = req.params;
+  const data = { ...(req.body as PatientData), chpsCompoundId };
   const patient = await createPatient(data);
 
   return res
@@ -55,5 +56,5 @@ export const editChpsPatient = catchAsync(async (req, res, next) => {
   const patient = await updateChpsPatient(chpsId, patientId, data);
 
   if (!patient) return next(new AppError("Not found", StatusCodes.NOT_FOUND));
-  return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
+  return res.json({ status: STATUSES.SUCCESS, data: patient });
 });
