@@ -28,7 +28,7 @@ export const getDefaultStaff = async (userId: string) => {
   const chps = await getChpsCompoundByAuthId(userId);
   return await Staff.findOne({
     chpsCompoundId: chps?._id,
-    staffID: "default_Staff",
+    staffId: "default_Staff",
   });
 };
 export const getStaffs = async (authId: string) => {
