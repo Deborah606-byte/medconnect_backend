@@ -25,7 +25,12 @@ class LoginService {
 
   private loginStaff = async () => {
     const staff = await getDefaultStaff(this.authId);
+
+    console.log({ getDefaultStaff: staff });
+
     const role = await getRoleByStaffId(staff?._id?.toString() ?? "");
+
+    console.log({ getRoleByStaffId: role });
 
     if (!staff || !role) return null;
     console.log({ actor: staff._id.toString(), role: role.type });
