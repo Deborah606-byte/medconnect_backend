@@ -1,5 +1,6 @@
 import { Patient } from "../models/patient";
 import { PatientData } from "../../types/staff";
+import { checkUniques } from "./index";
 
 export const createPatient = async (data: PatientData) =>
   await Patient.create(data);
@@ -20,7 +21,13 @@ export const updateChpsPatient = async (
   chpsId: string,
   id: string,
   data: PatientData
-) =>
-  await Patient.findOneAndUpdate({ chpsCompoundId: chpsId, _id: id }, data, {
-    new: true,
+) => {
+  const updateData = await checkUniques({
+    model: Patient,
+    data,
+    filter: { chpsCompoundId: chpsId, _id: id },
   });
+
+  if (!updateData) return null;
+  return Patient.findByIdAndUpdate(id, updateData, { new: true });
+};

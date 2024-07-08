@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { GENDERS, MARITAL_STATUSES } from "../../config/constants";
+import AppError from "../../utils/app-error";
+import { StatusCodes } from "http-status-codes";
 
 const requiredString = { type: String, required: true };
 
@@ -55,29 +57,30 @@ const patient = new mongoose.Schema(
     },
   },
   {
-    toObject: { virtuals: true },
     timestamps: true,
   }
 );
-
-patient.virtual("fullName").get(function () {
-  return `${this.firstName} ${this.lastName}`;
-});
 
 patient.pre("validate", async function (next) {
   if (!this.patientId) {
     try {
       const patientCount = await mongoose
-        .model("Staff")
+        .model("Patient")
         .countDocuments({ chpsCompoundId: this.chpsCompoundId });
       const chps = await mongoose
         .model("ChpsCompound")
         .findOne({ _id: this.chpsCompoundId });
       const index = `${patientCount + 1}`.padStart(3, "0");
       this.patientId = `MDC${chps.getInitials()}${index}`;
+
+      console.log({ validator: this });
       next();
     } catch (err) {
-      next(err as Error);
+      const error = new AppError(
+        "PatientId error",
+        StatusCodes.PRECONDITION_FAILED
+      );
+      return next(error);
     }
   } else {
     next();

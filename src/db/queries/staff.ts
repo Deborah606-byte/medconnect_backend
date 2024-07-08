@@ -1,6 +1,8 @@
 import { Staff, Role } from "../models/staff";
+import { checkUniques } from "./index";
 import { getChpsCompoundByAuthId } from "./chps-compound";
 import { getUserById } from "./user";
+
 import type { StaffData, RoleData } from "../../types/chps-compound";
 
 //Roles
@@ -21,10 +23,7 @@ export const createStaff = async (data: StaffData) => {
 };
 export const removeStaff = async (cid: string, id: string) =>
   await Staff.findOneAndDelete({ chpsCompoundId: cid, _id: id });
-export const editStaff = async (cid: string, id: string, data: StaffData) =>
-  await Staff.findOneAndUpdate({ chpsCompoundId: cid, _id: id }, data, {
-    new: true,
-  });
+
 export const getDefaultStaff = async (userId: string) => {
   const chps = await getChpsCompoundByAuthId(userId);
   return await Staff.findOne({
@@ -38,4 +37,15 @@ export const getStaffs = async (authId: string) => {
 
   const chps = await getChpsCompoundByAuthId(authId);
   return Staff.find({ chpsCompoundId: chps!._id });
+};
+
+export const editStaff = async (cid: string, id: string, data: StaffData) => {
+  const updateData = await checkUniques({
+    model: Staff,
+    data,
+    filter: { chpsCompoundId: cid, _id: id },
+  });
+
+  if (!updateData) return null;
+  return Staff.findByIdAndUpdate(id, updateData, { new: true });
 };
