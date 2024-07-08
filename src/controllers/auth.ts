@@ -109,3 +109,17 @@ export const resetPassword = catchAsync(
     });
   }
 );
+
+export const getStaffAuth = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { user } = req.auth!;
+  const service = new LoginService(user, false);
+  const response = await service.authStaff(id);
+
+  if (!response) {
+    const error = new AppError("Auth Failed", StatusCodes.PRECONDITION_FAILED);
+    return next(error);
+  }
+
+  return res.json({ status: STATUSES.SUCCESS, data: { ...response } });
+});
