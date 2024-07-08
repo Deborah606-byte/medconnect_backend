@@ -26,9 +26,10 @@ export const removeStaff = async (cid: string, id: string) =>
 
 export const getDefaultStaff = async (userId: string) => {
   const chps = await getChpsCompoundByAuthId(userId);
+  console.log({ GET_CHPS: chps });
   return await Staff.findOne({
     chpsCompoundId: chps?._id,
-    staffID: "default_Staff",
+    staffId: "default_Staff",
   });
 };
 export const getStaffs = async (authId: string) => {
