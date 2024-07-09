@@ -3,9 +3,12 @@ import { logger } from "../utils/logger";
 import type { ObjectId } from "mongodb";
 import type { Document } from "mongoose";
 
-interface CompoundResource extends Document {
-  chpsCompoundId: ObjectId;
+export interface CompoundResource extends Document {
+  chpsCompoundId?: ObjectId;
+  patientId?: ObjectId | string;
 }
+
+interface PatientResource extends Document {}
 
 abstract class BaseIDGenerator<T extends CompoundResource> {
   protected readonly prefix: string = "MDC";
@@ -74,6 +77,36 @@ export class PatientIdGenerator extends BaseIDGenerator<CompoundResource> {
         .findOne({ _id: this.modelInstance.chpsCompoundId });
       const index = `${patientCount + 1}`.padStart(3, "0");
       this.currentId = this.prefix + chps.getInitials() + index;
+      return true;
+    } catch (err) {
+      const { message } = err as Error;
+      logger.error({ action: "generatePatientId", msg: message });
+      return false;
+    }
+  };
+}
+
+export class PatientMiscIdGenerator extends BaseIDGenerator<CompoundResource> {
+  protected modelName: string;
+
+  constructor(name: string, instance: CompoundResource, idx: string) {
+    super(instance, idx);
+    this.modelName = name;
+    this.setError();
+  }
+
+  private readonly prefixes: Record<string, string> = {
+    Prescription: "RX",
+    TreatmentPlan: "TP",
+    VisitLog: "VL",
+    DiagnosisReport: "DR",
+  };
+
+  protected generateId = async () => {
+    try {
+      const itemsCount = await mongoose.model(this.modelName).countDocuments();
+      const index = `${itemsCount + 1}`.padStart(5, "0");
+      this.currentId = this.prefix + this.prefixes[this.modelName] + index;
       return true;
     } catch (err) {
       const { message } = err as Error;

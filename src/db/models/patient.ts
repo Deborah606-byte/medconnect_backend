@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import AppError from "../../utils/app-error";
 import { GENDERS, MARITAL_STATUSES } from "../../config/constants";
-import { PatientIdGenerator } from "../../services/id";
+import { PatientIdGenerator, PatientMiscIdGenerator } from "../../services/id";
 import { StatusCodes } from "http-status-codes";
+import type { CompoundResource } from "../../services/id";
 
 const requiredString = { type: String, required: true };
 
@@ -62,6 +63,79 @@ const patient = new mongoose.Schema(
   }
 );
 
+const medication = new mongoose.Schema({
+  name: requiredString,
+  dosage: requiredString,
+  frequency: requiredString,
+  duration: requiredString,
+});
+const prescription = new mongoose.Schema({
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Patient",
+    required: true,
+  },
+  prescriptionId: requiredString,
+  notes: requiredString,
+  healthOfficialName: requiredString,
+  date: Date,
+  medication: { type: medication, required: true },
+});
+
+const treatmentPlan = new mongoose.Schema({
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Patient",
+    required: true,
+  },
+  treatmentPlanId: requiredString,
+  name: requiredString,
+  startDate: Date,
+  endDate: Date,
+  objective: requiredString,
+  medicationName: requiredString,
+  followUpSchedule: requiredString,
+  notes: requiredString,
+});
+
+const diagnosisReport = new mongoose.Schema({
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Patient",
+    required: true,
+  },
+  diagnosisReportId: requiredString,
+  doctorName: requiredString,
+  date: Date,
+  followUpDate: Date,
+  notes: requiredString,
+  symptoms: requiredString,
+  recommendedTest: requiredString,
+});
+
+const visitLog = new mongoose.Schema({
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Patient",
+    required: true,
+  },
+  visitLogId: requiredString,
+  date: Date,
+  purpose: requiredString,
+  official: requiredString,
+  notes: requiredString,
+});
+
+const appointment = new mongoose.Schema({
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Patient",
+    required: true,
+  },
+  date: requiredString,
+  official: requiredString,
+});
+
 patient.pre("validate", async function (next) {
   const idGenerator = new PatientIdGenerator(this, this.patientId);
   const { status, data } = await idGenerator.generate();
@@ -75,4 +149,80 @@ patient.pre("validate", async function (next) {
   next();
 });
 
+prescription.pre("validate", async function (this, next) {
+  const idGenerator = new PatientMiscIdGenerator(
+    "Prescription",
+    this,
+    this.prescriptionId
+  );
+  const { status, data } = await idGenerator.generate();
+
+  if (!status) {
+    const error = new AppError(data, StatusCodes.PRECONDITION_FAILED);
+    return next(error);
+  }
+
+  this.prescriptionId = data;
+  next();
+});
+
+treatmentPlan.pre("validate", async function (this, next) {
+  const idGenerator = new PatientMiscIdGenerator(
+    "TreatmentPlan",
+    this,
+    this.treatmentPlanId
+  );
+  const { status, data } = await idGenerator.generate();
+
+  if (!status) {
+    const error = new AppError(data, StatusCodes.PRECONDITION_FAILED);
+    return next(error);
+  }
+
+  this.treatmentPlanId = data;
+  next();
+});
+
+visitLog.pre("validate", async function (this, next) {
+  const idGenerator = new PatientMiscIdGenerator(
+    "VisitLog",
+    this,
+    this.visitLogId
+  );
+  const { status, data } = await idGenerator.generate();
+
+  if (!status) {
+    const error = new AppError(data, StatusCodes.PRECONDITION_FAILED);
+    return next(error);
+  }
+
+  this.visitLogId = data;
+  next();
+});
+
+diagnosisReport.pre("validate", async function (this, next) {
+  const idGenerator = new PatientMiscIdGenerator(
+    "DiagnosisReport",
+    this,
+    this.diagnosisReportId
+  );
+  const { status, data } = await idGenerator.generate();
+
+  if (!status) {
+    const error = new AppError(data, StatusCodes.PRECONDITION_FAILED);
+    return next(error);
+  }
+
+  this.diagnosisReportId = data;
+  next();
+});
+
 export const Patient = mongoose.model("Patient", patient);
+export const Prescription = mongoose.model("Prescription", prescription);
+export const TreatmentPlan = mongoose.model("TreatmentPlan", treatmentPlan);
+export const VisitLog = mongoose.model("VisitLog", visitLog);
+export const Appointment = mongoose.model("Appointment", appointment);
+export const DiagnosisReport = mongoose.model(
+  "DiagnosisReport",
+  diagnosisReport
+);
