@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import { GENDERS, MARITAL_STATUSES } from "../../config/constants";
 import AppError from "../../utils/app-error";
+import { GENDERS, MARITAL_STATUSES } from "../../config/constants";
+import { IDGenerator } from "../../services/id";
 import { StatusCodes } from "http-status-codes";
 
 const requiredString = { type: String, required: true };
@@ -62,29 +63,16 @@ const patient = new mongoose.Schema(
 );
 
 patient.pre("validate", async function (next) {
-  if (!this.patientId) {
-    try {
-      const patientCount = await mongoose
-        .model("Patient")
-        .countDocuments({ chpsCompoundId: this.chpsCompoundId });
-      const chps = await mongoose
-        .model("ChpsCompound")
-        .findOne({ _id: this.chpsCompoundId });
-      const index = `${patientCount + 1}`.padStart(3, "0");
-      this.patientId = `MDC${chps.getInitials()}${index}`;
+  const idGenerator = new IDGenerator("Staff", this, this.patientId);
+  const { status, data } = await idGenerator.generate();
 
-      console.log({ validator: this });
-      next();
-    } catch (err) {
-      const error = new AppError(
-        "PatientId error",
-        StatusCodes.PRECONDITION_FAILED
-      );
-      return next(error);
-    }
-  } else {
-    next();
+  if (!status) {
+    const error = new AppError(data, StatusCodes.PRECONDITION_FAILED);
+    return next(error);
   }
+
+  this.patientId = data;
+  next();
 });
 
 export const Patient = mongoose.model("Patient", patient);

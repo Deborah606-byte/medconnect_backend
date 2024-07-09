@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import { STAFF_ROLES } from "../../config/constants";
+import { IDGenerator } from "../../services/id";
+import AppError from "../../utils/app-error";
+import { StatusCodes } from "http-status-codes";
 
 const requiredString = {
   type: String,
@@ -47,18 +50,16 @@ const staff = new mongoose.Schema(
 );
 
 staff.pre("validate", async function (next) {
-  if (!this.staffId) {
-    try {
-      const staffCount = await mongoose.model("Staff").countDocuments();
-      const index = `${staffCount + 1}`.padStart(5, "0");
-      this.staffId = "MCS" + index;
-      next();
-    } catch (err) {
-      next(err as Error);
-    }
-  } else {
-    next();
+  const idGenerator = new IDGenerator("Staff", this, this.staffId);
+  const { status, data } = await idGenerator.generate();
+
+  if (!status) {
+    const error = new AppError(data, StatusCodes.PRECONDITION_FAILED);
+    return next(error);
   }
+
+  this.staffId = data;
+  next();
 });
 
 export const Role = mongoose.model("Role", role);
