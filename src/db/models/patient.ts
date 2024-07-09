@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import AppError from "../../utils/app-error";
 import { GENDERS, MARITAL_STATUSES } from "../../config/constants";
-import { IDGenerator } from "../../services/id";
+import { PatientIdGenerator } from "../../services/id";
 import { StatusCodes } from "http-status-codes";
 
 const requiredString = { type: String, required: true };
@@ -63,7 +63,7 @@ const patient = new mongoose.Schema(
 );
 
 patient.pre("validate", async function (next) {
-  const idGenerator = new IDGenerator("Staff", this, this.patientId);
+  const idGenerator = new PatientIdGenerator(this, this.patientId);
   const { status, data } = await idGenerator.generate();
 
   if (!status) {

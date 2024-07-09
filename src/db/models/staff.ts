@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { STAFF_ROLES } from "../../config/constants";
-import { IDGenerator } from "../../services/id";
+import { StaffIdGenerator } from "../../services/id";
 import AppError from "../../utils/app-error";
 import { StatusCodes } from "http-status-codes";
 
@@ -50,7 +50,7 @@ const staff = new mongoose.Schema(
 );
 
 staff.pre("validate", async function (next) {
-  const idGenerator = new IDGenerator("Staff", this, this.staffId);
+  const idGenerator = new StaffIdGenerator(this, this.staffId);
   const { status, data } = await idGenerator.generate();
 
   if (!status) {
