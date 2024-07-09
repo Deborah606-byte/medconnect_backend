@@ -35,13 +35,13 @@ export const prescriptionSchema = z
   .object({
     healthOfficialName: z.string(),
     date: z.date(),
+    notes: z.string(),
     medication: z
       .object({
         name: z.string(),
         dosage: z.string(),
         frequency: z.string(),
         duration: z.string(),
-        notes: z.string(),
       })
       .strict(),
   })
@@ -67,7 +67,7 @@ export const diagnosisReportSchema = z
     recommendedTest: z.string(),
   })
   .strict();
-export const visitLogsSchema = z
+export const visitLogSchema = z
   .object({
     date: z.date(),
     purpose: z.string(),
