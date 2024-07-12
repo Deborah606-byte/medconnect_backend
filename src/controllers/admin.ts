@@ -9,7 +9,7 @@ import {
   updateAdmin,
   deleteAdmin,
 } from "../db/queries/admin";
-import type { AdminData, CreateAdminData } from "../types/chps-compound";
+import type { UpdateAdminData, CreateAdminData } from "../types/chps-compound";
 
 export const addAdmin = catchAsync(async (req, res) => {
   const data = req.body as CreateAdminData;
@@ -41,7 +41,7 @@ export const fetchAdmins = catchAsync(async (req, res) => {
 
 export const editAdmin = catchAsync(async (req, res, next) => {
   const id = req.params.id;
-  const data = req.body as AdminData;
+  const data = req.body as UpdateAdminData;
   const updatedAdmin = await updateAdmin(id, data);
 
   if (!updatedAdmin) {
