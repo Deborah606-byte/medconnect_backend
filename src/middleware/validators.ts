@@ -3,7 +3,7 @@ import { adminSchema, updateAmdinSchema } from "../db/schemas/admin";
 import { staffSchema, roleSchema } from "../db/schemas/staff";
 import {
   chpsCompoundSchema,
-  chpsCompoundParamsSchema,
+  updateChpsCompoundSchema,
 } from "../db/schemas/chps-compound";
 import {
   userSchema,
@@ -40,26 +40,29 @@ const standardRequestParams = z.object({
   user: z.string().min(24),
 });
 
+//general
 export const validateStandardParams = validateParams(standardRequestParams);
+
+//auth
 export const validateLoginData = validateData(userSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
 export const validateResetPasswordData = validateData(resetPasswordDataSchema);
+//admin
+export const validateUpdateAdminData = validateData(updateAmdinSchema);
+export const validateAdminData = validateData(
+  adminSchema.omit({ authUserId: true })
+);
+//staff
 export const validateStaffData = validateData(staffSchema);
 export const validateRoleData = validateData(roleSchema);
 export const validateUpdateStaffData = validateData(
   staffSchema.merge(z.object({ staffId: z.string() }))
 );
-export const validateUpdateAdminData = validateData(updateAmdinSchema);
-export const validateAdminData = validateData(
-  adminSchema.omit({ authUserId: true })
-);
-export const validateChpsUpdateData = validateData(chpsCompoundSchema);
-export const validateChpsRequestParams = validateParams(
-  chpsCompoundParamsSchema
-);
+//chps
+export const validateChpsUpdateData = validateData(updateChpsCompoundSchema);
+export const validateChpsRequestParams = validateParams(standardRequestParams);
 export const validateChpsCompoundData = validateData(
   chpsCompoundSchema.omit({ authUserId: true }).merge(userSchema)
 );
-
 // Patient
 export const validatePatientData = validateData(patientSchema);
