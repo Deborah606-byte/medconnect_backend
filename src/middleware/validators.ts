@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { adminSchema } from "../db/schemas/admin";
+import { adminSchema, updateAmdinSchema } from "../db/schemas/admin";
 import { staffSchema, roleSchema } from "../db/schemas/staff";
 import {
   chpsCompoundSchema,
@@ -49,7 +49,7 @@ export const validateRoleData = validateData(roleSchema);
 export const validateUpdateStaffData = validateData(
   staffSchema.merge(z.object({ staffId: z.string() }))
 );
-export const validateUpdateAdminData = validateData(adminSchema);
+export const validateUpdateAdminData = validateData(updateAmdinSchema);
 export const validateAdminData = validateData(
   adminSchema.omit({ authUserId: true })
 );
