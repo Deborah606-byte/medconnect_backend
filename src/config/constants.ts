@@ -50,11 +50,11 @@ export const URLS = {
       one: "/:pid/treatment-plans/:aid",
     },
     diagnosisReport: {
-      all: "/:id/:pid/diagnosis-reports",
-      one: "/:id/:pid/:aid",
+      all: "/:pid/diagnosis-reports",
+      one: "/:pid/diagnosis-reports/:aid",
     },
-    visitLog: { all: "/:id/:pid/visit-logs", one: "/:id/:pid/:aid" },
-    appointment: { all: "/:id/:pid/appointments", one: "/:id/:pid/:aid" },
+    visitLog: { all: "/:pid/visit-logs", one: "/:pid/visit-logs/:aid" },
+    appointment: { all: "/:pid/appointments", one: "/:pid/appointments/:aid" },
   },
   inquiry: { root: "inquiries", submit: "/submit-inquiry" },
   auth: {

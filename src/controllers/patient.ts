@@ -11,6 +11,9 @@ import {
   updateChpsPatient,
   PresciptionQuery,
   TreatmentPlanQuery,
+  DiagnosisReportQuery,
+  VisitLogQuery,
+  AppointmentQuery,
 } from "../db/queries/patient";
 import type { PatientResourceQueryInstance } from "../db/queries/patient";
 import type { PatientData, PatientResourceParams } from "../types/patient";
@@ -118,5 +121,10 @@ class PatientResourceController<T> {
   });
 }
 
+export const visitLog = new PatientResourceController(VisitLogQuery);
 export const prescription = new PatientResourceController(PresciptionQuery);
+export const appointment = new PatientResourceController(AppointmentQuery);
 export const treatmentPlan = new PatientResourceController(TreatmentPlanQuery);
+export const diagnosisReport = new PatientResourceController(
+  DiagnosisReportQuery
+);
