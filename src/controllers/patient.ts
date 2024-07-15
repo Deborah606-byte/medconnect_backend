@@ -12,6 +12,7 @@ import {
   PresciptionQuery,
   TreatmentPlanQuery,
   DiagnosisReportQuery,
+  VisitLogQuery,
 } from "../db/queries/patient";
 import type { PatientResourceQueryInstance } from "../db/queries/patient";
 import type { PatientData, PatientResourceParams } from "../types/patient";
@@ -119,6 +120,7 @@ class PatientResourceController<T> {
   });
 }
 
+export const visitLog = new PatientResourceController(VisitLogQuery);
 export const prescription = new PatientResourceController(PresciptionQuery);
 export const treatmentPlan = new PatientResourceController(TreatmentPlanQuery);
 export const diagnosisReport = new PatientResourceController(
