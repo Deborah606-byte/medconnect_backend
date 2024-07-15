@@ -8,6 +8,7 @@ import {
   validateTreatmentPlanData,
   validateDiagnosisReportData,
   validateVisitLogsData,
+  validateAppointmentData,
 } from "../middleware/validators";
 import {
   addPatient,
@@ -17,6 +18,7 @@ import {
   editChpsPatient,
   removeChpsPatient,
   prescription,
+  appointment,
   treatmentPlan,
   diagnosisReport,
   visitLog,
@@ -84,4 +86,17 @@ router
   .get(visitLog.getResource)
   .patch(validateVisitLogsData, visitLog.editResource)
   .delete(visitLog.removeResource);
+
+// appointment
+router
+  .route(URLS.patient.appointment.all)
+  .get(appointment.getResources)
+  .post(validateAppointmentData, appointment.addResource);
+router
+  .route(URLS.patient.appointment.one)
+  .all(validatePatientResourceParams)
+  .get(appointment.getResource)
+  .patch(validateAppointmentData, appointment.editResource)
+  .delete(appointment.removeResource);
+
 export const patient = router;
