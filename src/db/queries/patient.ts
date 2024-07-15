@@ -1,5 +1,10 @@
 import { checkUniques } from "./index";
-import { DiagnosisReport, Patient, VisitLog } from "../models/patient";
+import {
+  Appointment,
+  DiagnosisReport,
+  Patient,
+  VisitLog,
+} from "../models/patient";
 import { Prescription, TreatmentPlan } from "../models/patient";
 import type { Document, Model, ObjectId } from "mongoose";
 import type {
@@ -77,5 +82,6 @@ export const TreatmentPlanQuery = new PatientResourceQuery(TreatmentPlan);
 export const PresciptionQuery = new PatientResourceQuery(Prescription);
 export const DiagnosisReportQuery = new PatientResourceQuery(DiagnosisReport);
 export const VisitLogQuery = new PatientResourceQuery(VisitLog);
+export const AppointmentQuery = new PatientResourceQuery(Appointment);
 
 export type PatientResourceQueryInstance<T> = PatientResourceQuery<T>;

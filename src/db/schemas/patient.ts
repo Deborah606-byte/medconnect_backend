@@ -97,6 +97,7 @@ export const appointmentSchema = z
   .object({
     date: z.string(),
     official: z.string(),
+    isClosed: z.boolean().optional().default(false),
   })
   .strict();
 

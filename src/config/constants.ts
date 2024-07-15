@@ -54,7 +54,7 @@ export const URLS = {
       one: "/:pid/diagnosis-reports/:aid",
     },
     visitLog: { all: "/:pid/visit-logs", one: "/:pid/visit-logs/:aid" },
-    appointment: { all: "/:pid/appointments", one: "/:id/:pid/:aid" },
+    appointment: { all: "/:pid/appointments", one: "/:pid/appointments/:aid" },
   },
   inquiry: { root: "inquiries", submit: "/submit-inquiry" },
   auth: {
