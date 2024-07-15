@@ -1,6 +1,9 @@
 import { Admin } from "../models/admin";
 import { createUser } from "./user";
-import type { AdminData, CreateAdminData } from "../../types/chps-compound";
+import type {
+  UpdateAdminData,
+  CreateAdminData,
+} from "../../types/chps-compound";
 
 export const createAdmin = async (data: CreateAdminData) => {
   const { email, password, name, contact } = data;
@@ -13,5 +16,5 @@ export const getAdminByAuthId = async (id: string) =>
 export const getAdmins = async () => await Admin.find({});
 export const deleteAdmin = async (id: string) =>
   await Admin.findByIdAndDelete(id);
-export const updateAdmin = async (id: string, data: AdminData) =>
+export const updateAdmin = async (id: string, data: UpdateAdminData) =>
   await Admin.findByIdAndUpdate(id, data, { new: true });

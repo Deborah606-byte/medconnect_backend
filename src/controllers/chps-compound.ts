@@ -7,7 +7,10 @@ import {
   deleteChpsCompound,
   updateChpsCompound,
 } from "../db/queries/chps-compound";
-import type { ChpsCompundData } from "../types/chps-compound";
+import type {
+  ChpsCompundData,
+  UpdateChpsCompoundData,
+} from "../types/chps-compound";
 import AppError from "../utils/app-error";
 import { StatusCodes } from "http-status-codes";
 
@@ -33,7 +36,7 @@ export const getCompounds = catchAsync(async (req, res) => {
 
 export const updateCompound = catchAsync(async (req, res, next) => {
   const id = req.params.id;
-  const data: ChpsCompundData = req.body;
+  const data: UpdateChpsCompoundData = req.body;
   const updatedCompound = await updateChpsCompound(id, data);
 
   if (!updatedCompound) {
