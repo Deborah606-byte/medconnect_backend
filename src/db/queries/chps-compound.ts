@@ -38,7 +38,12 @@ export const updateChpsCompound = async (
   id: string,
   data: UpdateChpsCompoundData
 ) => {
-  const updateData = await checkUniques(ChpsCompound, data, { _id: id });
+  const updateData = await checkUniques({
+    model: ChpsCompound,
+    data,
+    filter: { _id: id },
+  });
+  if (!updateData) return null;
   return await ChpsCompound.findByIdAndUpdate(id, data, { new: true });
 };
 export const getAllChpsCompounds = async () => await ChpsCompound.find({});
