@@ -135,6 +135,11 @@ const appointment = new mongoose.Schema({
   },
   date: requiredString,
   official: requiredString,
+  isClosed: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 patient.pre("validate", async function (next) {
