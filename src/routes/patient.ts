@@ -1,6 +1,11 @@
 import express from "express";
 import { URLS } from "../config/constants";
-import { validatePatientData } from "../middleware/validators";
+import { authorizeAdmin } from "../middleware/auth-requests";
+import {
+  validatePatientData,
+  validatePresciptionData,
+  validatePatientResourceParams,
+} from "../middleware/validators";
 import {
   addPatient,
   getAllPatients,
@@ -8,8 +13,13 @@ import {
   getChpsPatient,
   editChpsPatient,
   removeChpsPatient,
+  //prescriptions
+  getPresciptions,
+  getPresciption,
+  addPrescription,
+  editPrescription,
+  removePrescription,
 } from "../controllers/patient";
-import { authorizeAdmin } from "../middleware/auth-requests";
 
 const router = express.Router();
 
@@ -23,5 +33,18 @@ router
   .get(getChpsPatient)
   .delete(removeChpsPatient)
   .patch(validatePatientData, editChpsPatient);
+
+// prescription
+router
+  .route(URLS.patient.chps.prescription.all)
+  .get(getPresciptions)
+  .post(validatePresciptionData, addPrescription);
+
+router
+  .route(URLS.patient.chps.prescription.one)
+  .all(validatePatientResourceParams)
+  .get(getPresciption)
+  .patch(validatePresciptionData, editPrescription)
+  .delete(removePrescription);
 
 export const patient = router;

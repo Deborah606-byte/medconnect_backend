@@ -3,11 +3,11 @@ import AppError from "../../utils/app-error";
 import { GENDERS, MARITAL_STATUSES } from "../../config/constants";
 import { PatientIdGenerator, PatientMiscIdGenerator } from "../../services/id";
 import { StatusCodes } from "http-status-codes";
-import type { CompoundResource } from "../../services/id";
 
 const requiredString = { type: String, required: true };
 
 const additionals = new mongoose.Schema({
+  bloodGroup: requiredString,
   allergies: { type: [String], default: [] },
   knownCondition: String,
   primaryPhysician: String,
@@ -25,6 +25,7 @@ const patient = new mongoose.Schema(
     patientId: requiredString,
     firstName: requiredString,
     lastName: requiredString,
+    dateOfBirth: requiredString,
     gender: {
       type: String,
       required: true,
@@ -155,6 +156,7 @@ prescription.pre("validate", async function (this, next) {
     this,
     this.prescriptionId
   );
+
   const { status, data } = await idGenerator.generate();
 
   if (!status) {

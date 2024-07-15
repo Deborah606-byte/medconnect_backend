@@ -9,8 +9,17 @@ import {
   fetchChpsPatient,
   deleteChpsPatient,
   updateChpsPatient,
+  fetchPrescriptions,
+  fetchPrescription,
+  createPrescription,
+  updatePrescription,
+  deletePrescription,
 } from "../db/queries/patient";
-import type { PatientData } from "../types/staff";
+import type {
+  PatientData,
+  PatientResourceParams,
+  PrescriptionData,
+} from "../types/patient";
 
 export const addPatient = catchAsync(async (req, res) => {
   const { id: chpsCompoundId } = req.params;
@@ -57,4 +66,51 @@ export const editChpsPatient = catchAsync(async (req, res, next) => {
 
   if (!patient) return next(new AppError("Not found", StatusCodes.NOT_FOUND));
   return res.json({ status: STATUSES.SUCCESS, data: patient });
+});
+
+// Presciption
+export const getPresciptions = catchAsync(async (req, res) => {
+  const patientId = req.params.pid;
+  const prescriptions = await fetchPrescriptions(patientId);
+  return res.json({ status: STATUSES.SUCCESS, data: prescriptions });
+});
+
+export const getPresciption = catchAsync(async (req, res, next) => {
+  const params = req.params as PatientResourceParams;
+  const prescription = await fetchPrescription(params);
+
+  if (!prescription)
+    return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
+
+  return res.json({ status: STATUSES.SUCCESS, data: prescription });
+});
+
+export const addPrescription = catchAsync(async (req, res) => {
+  const patientId = req.params.pid;
+  const data = req.body as PrescriptionData;
+  const prescription = await createPrescription(patientId, data);
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ status: STATUSES.SUCCESS, data: prescription });
+});
+
+export const editPrescription = catchAsync(async (req, res, next) => {
+  const params = req.params as PatientResourceParams;
+  const data = req.body as PrescriptionData;
+  const prescription = await updatePrescription(params, data);
+
+  if (!prescription)
+    return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
+
+  return res.json({ status: STATUSES.SUCCESS, data: prescription });
+});
+
+export const removePrescription = catchAsync(async (req, res, next) => {
+  const params = req.params as PatientResourceParams;
+  const prescription = await deletePrescription(params);
+
+  if (!prescription)
+    return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
+
+  return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
 });
