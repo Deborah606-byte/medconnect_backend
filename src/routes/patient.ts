@@ -7,6 +7,7 @@ import {
   validatePatientResourceParams,
   validateTreatmentPlanData,
   validateDiagnosisReportData,
+  validateVisitLogsData,
 } from "../middleware/validators";
 import {
   addPatient,
@@ -18,6 +19,7 @@ import {
   prescription,
   treatmentPlan,
   diagnosisReport,
+  visitLog,
 } from "../controllers/patient";
 
 const router = express.Router();
@@ -70,4 +72,16 @@ router
   .patch(validateDiagnosisReportData, diagnosisReport.editResource)
   .delete(diagnosisReport.removeResource);
 
+// visit-log
+router
+  .route(URLS.patient.visitLog.all)
+  .get(visitLog.getResources)
+  .post(validateVisitLogsData, visitLog.addResource);
+
+router
+  .route(URLS.patient.visitLog.one)
+  .all(validatePatientResourceParams)
+  .get(visitLog.getResource)
+  .patch(validateVisitLogsData, visitLog.editResource)
+  .delete(visitLog.removeResource);
 export const patient = router;
