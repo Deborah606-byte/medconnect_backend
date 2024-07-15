@@ -11,7 +11,15 @@ import {
   resetPasswordDataSchema,
 } from "../db/schemas/user";
 import type { Request, Response, NextFunction } from "express";
-import { patientSchema } from "../db/schemas/patient";
+import {
+  appointmentSchema,
+  diagnosisReportSchema,
+  patientSchema,
+  prescriptionSchema,
+  treatmentPlanSchema,
+  visitLogSchema,
+  patientResourceParamsSchema,
+} from "../db/schemas/patient";
 
 function validateData(schema: z.ZodObject<any, any>) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -66,3 +74,11 @@ export const validateChpsCompoundData = validateData(
 );
 // Patient
 export const validatePatientData = validateData(patientSchema);
+export const validatePresciptionData = validateData(prescriptionSchema);
+export const validateAppointmentData = validateData(appointmentSchema);
+export const validateTreatmentPlanData = validateData(treatmentPlanSchema);
+export const validateDiagnosisReportData = validateData(diagnosisReportSchema);
+export const validateVisitLogsData = validateData(visitLogSchema);
+export const validatePatientResourceParams = validateParams(
+  patientResourceParamsSchema
+);

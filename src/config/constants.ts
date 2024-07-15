@@ -37,10 +37,26 @@ export const URLS = {
   patient: {
     root: "/patient",
     all: "/",
-    chps: { all: "/:id/", one: "/:id/:pid" },
+    chps: {
+      all: "/chps/:id/",
+      one: "/chps/:id/:pid",
+      prescription: {
+        all: "/:pid/prescriptions/",
+        one: "/:pid/prescriptions/:aid",
+      },
+      treatmentPlan: {
+        all: "/:id/:pid/treatment-plans",
+        one: "/:id/:pid/:aid",
+      },
+      diagnosisReport: {
+        all: "/:id/:pid/diagnosis-reports",
+        one: "/:id/:pid/:aid",
+      },
+      visitLog: { all: "/:id/:pid/visit-logs", one: "/:id/:pid/:aid" },
+      appointment: { all: "/:id/:pid/appointments", one: "/:id/:pid/:aid" },
+    },
   },
   inquiry: { root: "inquiries", submit: "/submit-inquiry" },
-  prescription: { root: "/prescriptions", all: "/", one: "/:id" },
   auth: {
     root: "/auth",
     login: "/login",
