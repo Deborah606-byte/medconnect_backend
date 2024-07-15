@@ -1,6 +1,12 @@
 import express from "express";
 import { URLS } from "../config/constants";
-import { validatePatientData } from "../middleware/validators";
+import { authorizeAdmin } from "../middleware/auth-requests";
+import {
+  validatePatientData,
+  validatePresciptionData,
+  validatePatientResourceParams,
+  validateTreatmentPlanData,
+} from "../middleware/validators";
 import {
   addPatient,
   getAllPatients,
@@ -8,8 +14,9 @@ import {
   getChpsPatient,
   editChpsPatient,
   removeChpsPatient,
+  prescription,
+  treatmentPlan,
 } from "../controllers/patient";
-import { authorizeAdmin } from "../middleware/auth-requests";
 
 const router = express.Router();
 
@@ -23,5 +30,30 @@ router
   .get(getChpsPatient)
   .delete(removeChpsPatient)
   .patch(validatePatientData, editChpsPatient);
+
+// prescription
+router
+  .route(URLS.patient.prescription.all)
+  .get(prescription.getResources)
+  .post(validatePresciptionData, prescription.addResource);
+
+router
+  .route(URLS.patient.prescription.one)
+  .all(validatePatientResourceParams)
+  .get(prescription.getResource)
+  .patch(validatePresciptionData, prescription.editResource)
+  .delete(prescription.removeResource);
+
+// treatment-plans
+router
+  .route(URLS.patient.treatmentPlan.all)
+  .get(treatmentPlan.getResources)
+  .post(validateTreatmentPlanData, treatmentPlan.addResource);
+router
+  .route(URLS.patient.treatmentPlan.one)
+  .all(validatePatientResourceParams)
+  .get(treatmentPlan.getResource)
+  .patch(validateTreatmentPlanData, treatmentPlan.editResource)
+  .delete(treatmentPlan.removeResource);
 
 export const patient = router;

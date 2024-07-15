@@ -1,6 +1,15 @@
-import { Patient } from "../models/patient";
-import { PatientData } from "../../types/staff";
 import { checkUniques } from "./index";
+import { Patient } from "../models/patient";
+import { Prescription, TreatmentPlan } from "../models/patient";
+import type { Document, Model, ObjectId } from "mongoose";
+import type {
+  PatientData,
+  PrescriptionData,
+  TreatmentPlanData,
+  PatientResourceParams,
+} from "../../types/patient";
+
+type ResourceData = PrescriptionData | TreatmentPlanData;
 
 export const createPatient = async (data: PatientData) =>
   await Patient.create(data);
@@ -31,3 +40,40 @@ export const updateChpsPatient = async (
   if (!updateData) return null;
   return Patient.findByIdAndUpdate(id, updateData, { new: true });
 };
+export class PatientResourceQuery<T> {
+  private readonly model: Model<T>;
+
+  constructor(model: Model<T>) {
+    this.model = model;
+  }
+
+  public fetchResources = async (patientId: string) =>
+    await this.model.find({ patientId });
+
+  public fetchResource = async (params: PatientResourceParams) =>
+    await this.model.findOne({ patientId: params.pid, _id: params.aid });
+
+  public createResource = async (patientId: string, data: ResourceData) =>
+    await this.model.create({ ...data, patientId });
+
+  public deleteResource = async (params: PatientResourceParams) =>
+    await this.model.findOneAndDelete({
+      patientId: params.pid,
+      _id: params.aid,
+    });
+
+  public updateResource = async (
+    params: PatientResourceParams,
+    data: ResourceData
+  ) =>
+    await this.model.findOneAndUpdate(
+      { _id: params.aid, patientId: params.pid },
+      data,
+      { new: true, runValidators: true }
+    );
+}
+
+export const TreatmentPlanQuery = new PatientResourceQuery(TreatmentPlan);
+export const PresciptionQuery = new PatientResourceQuery(Prescription);
+
+export type PatientResourceQueryInstance<T> = PatientResourceQuery<T>;

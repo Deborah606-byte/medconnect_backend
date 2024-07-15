@@ -3,11 +3,11 @@ import AppError from "../../utils/app-error";
 import { GENDERS, MARITAL_STATUSES } from "../../config/constants";
 import { PatientIdGenerator, PatientMiscIdGenerator } from "../../services/id";
 import { StatusCodes } from "http-status-codes";
-import type { CompoundResource } from "../../services/id";
 
 const requiredString = { type: String, required: true };
 
 const additionals = new mongoose.Schema({
+  bloodGroup: requiredString,
   allergies: { type: [String], default: [] },
   knownCondition: String,
   primaryPhysician: String,
@@ -25,6 +25,7 @@ const patient = new mongoose.Schema(
     patientId: requiredString,
     firstName: requiredString,
     lastName: requiredString,
+    dateOfBirth: requiredString,
     gender: {
       type: String,
       required: true,
@@ -90,8 +91,8 @@ const treatmentPlan = new mongoose.Schema({
   },
   treatmentPlanId: requiredString,
   name: requiredString,
-  startDate: Date,
-  endDate: Date,
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
   objective: requiredString,
   medicationName: requiredString,
   followUpSchedule: requiredString,
@@ -155,6 +156,7 @@ prescription.pre("validate", async function (this, next) {
     this,
     this.prescriptionId
   );
+
   const { status, data } = await idGenerator.generate();
 
   if (!status) {
@@ -166,12 +168,13 @@ prescription.pre("validate", async function (this, next) {
   next();
 });
 
-treatmentPlan.pre("validate", async function (this, next) {
+treatmentPlan.pre("validate", async function (next) {
   const idGenerator = new PatientMiscIdGenerator(
     "TreatmentPlan",
     this,
     this.treatmentPlanId
   );
+
   const { status, data } = await idGenerator.generate();
 
   if (!status) {
