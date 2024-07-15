@@ -9,17 +9,11 @@ import {
   fetchChpsPatient,
   deleteChpsPatient,
   updateChpsPatient,
-  fetchPrescriptions,
-  fetchPrescription,
-  createPrescription,
-  updatePrescription,
-  deletePrescription,
+  PresciptionQuery,
+  TreatmentPlanQuery,
 } from "../db/queries/patient";
-import type {
-  PatientData,
-  PatientResourceParams,
-  PrescriptionData,
-} from "../types/patient";
+import type { PatientResourceQueryInstance } from "../db/queries/patient";
+import type { PatientData, PatientResourceParams } from "../types/patient";
 
 export const addPatient = catchAsync(async (req, res) => {
   const { id: chpsCompoundId } = req.params;
@@ -68,49 +62,61 @@ export const editChpsPatient = catchAsync(async (req, res, next) => {
   return res.json({ status: STATUSES.SUCCESS, data: patient });
 });
 
-// Presciption
-export const getPresciptions = catchAsync(async (req, res) => {
-  const patientId = req.params.pid;
-  const prescriptions = await fetchPrescriptions(patientId);
-  return res.json({ status: STATUSES.SUCCESS, data: prescriptions });
-});
+class PatientResourceController<T> {
+  private readonly instance: PatientResourceQueryInstance<T>;
 
-export const getPresciption = catchAsync(async (req, res, next) => {
-  const params = req.params as PatientResourceParams;
-  const prescription = await fetchPrescription(params);
+  constructor(instance: PatientResourceQueryInstance<T>) {
+    this.instance = instance;
+  }
 
-  if (!prescription)
-    return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
+  public getResources = catchAsync(async (req, res) => {
+    const patientId = req.params.pid;
+    const resources = await this.instance.fetchResources(patientId);
+    return res.json({ status: STATUSES.SUCCESS, data: resources });
+  });
 
-  return res.json({ status: STATUSES.SUCCESS, data: prescription });
-});
+  public getResource = catchAsync(async (req, res, next) => {
+    const params = req.params as PatientResourceParams;
+    const resource = await this.instance.fetchResource(params);
 
-export const addPrescription = catchAsync(async (req, res) => {
-  const patientId = req.params.pid;
-  const data = req.body as PrescriptionData;
-  const prescription = await createPrescription(patientId, data);
-  return res
-    .status(StatusCodes.CREATED)
-    .json({ status: STATUSES.SUCCESS, data: prescription });
-});
+    if (!resource)
+      return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
 
-export const editPrescription = catchAsync(async (req, res, next) => {
-  const params = req.params as PatientResourceParams;
-  const data = req.body as PrescriptionData;
-  const prescription = await updatePrescription(params, data);
+    return res.json({ status: STATUSES.SUCCESS, data: resource });
+  });
 
-  if (!prescription)
-    return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
+  public removeResource = catchAsync(async (req, res, next) => {
+    const params = req.params as PatientResourceParams;
+    const resource = await this.instance.deleteResource(params);
 
-  return res.json({ status: STATUSES.SUCCESS, data: prescription });
-});
+    if (!resource)
+      return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
 
-export const removePrescription = catchAsync(async (req, res, next) => {
-  const params = req.params as PatientResourceParams;
-  const prescription = await deletePrescription(params);
+    return res
+      .status(StatusCodes.NO_CONTENT)
+      .json({ status: STATUSES.SUCCESS });
+  });
 
-  if (!prescription)
-    return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
+  public editResource = catchAsync(async (req, res, next) => {
+    const params = req.params as PatientResourceParams;
+    const data = req.body;
+    const prescription = await this.instance.updateResource(params, data);
 
-  return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
-});
+    if (!prescription)
+      return next(new AppError("Not Found", StatusCodes.NOT_FOUND));
+
+    return res.json({ status: STATUSES.SUCCESS, data: prescription });
+  });
+
+  public addResource = catchAsync(async (req, res) => {
+    const patientId = req.params.pid;
+    const data = req.body;
+    const prescription = await this.instance.createResource(patientId, data);
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ status: STATUSES.SUCCESS, data: prescription });
+  });
+}
+
+export const prescription = new PatientResourceController(PresciptionQuery);
+export const treatmentPlan = new PatientResourceController(TreatmentPlanQuery);

@@ -8,8 +8,6 @@ export interface CompoundResource extends Document {
   patientId?: ObjectId | string;
 }
 
-interface PatientResource extends Document {}
-
 abstract class BaseIDGenerator<T extends CompoundResource> {
   protected readonly prefix: string = "MDC";
   protected abstract modelName: string;

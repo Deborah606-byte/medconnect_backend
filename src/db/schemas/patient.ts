@@ -62,7 +62,19 @@ export const treatmentPlanSchema = z
     followUpSchedule: z.string(),
     notes: z.string(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (data) => {
+      const startDate = new Date(data.startDate);
+      const endDate = new Date(data.endDate);
+      return endDate > startDate;
+    },
+    {
+      message: "endDate must be greater than startDate",
+      path: ["endDate"],
+    }
+  );
+
 export const diagnosisReportSchema = z
   .object({
     doctorName: z.string(),
