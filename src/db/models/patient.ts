@@ -91,8 +91,8 @@ const treatmentPlan = new mongoose.Schema({
   },
   treatmentPlanId: requiredString,
   name: requiredString,
-  startDate: Date,
-  endDate: Date,
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
   objective: requiredString,
   medicationName: requiredString,
   followUpSchedule: requiredString,
@@ -168,12 +168,13 @@ prescription.pre("validate", async function (this, next) {
   next();
 });
 
-treatmentPlan.pre("validate", async function (this, next) {
+treatmentPlan.pre("validate", async function (next) {
   const idGenerator = new PatientMiscIdGenerator(
     "TreatmentPlan",
     this,
     this.treatmentPlanId
   );
+
   const { status, data } = await idGenerator.generate();
 
   if (!status) {
