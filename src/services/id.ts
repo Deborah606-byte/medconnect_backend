@@ -8,8 +8,6 @@ export interface CompoundResource extends Document {
   patientId?: ObjectId | string;
 }
 
-interface PatientResource extends Document {}
-
 abstract class BaseIDGenerator<T extends CompoundResource> {
   protected readonly prefix: string = "MDC";
   protected abstract modelName: string;
@@ -25,7 +23,7 @@ abstract class BaseIDGenerator<T extends CompoundResource> {
 
   protected abstract generateId(): Promise<boolean>;
   protected setError = () =>
-    (this.error = `Failed to generate id for ${this.modelName.toLowerCase()}`);
+    (this.error = `Failed to generate id for ${this.modelName?.toLowerCase()}`);
 
   public generate = async () => {
     if (this.currentId) return { status: true, data: this.currentId };
