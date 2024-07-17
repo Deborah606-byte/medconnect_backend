@@ -1,15 +1,11 @@
 import mongoose from "mongoose";
 
+const requiredString = { type: String, required: true };
+
 const admin = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    contact: {
-      type: String,
-      required: true,
-    },
+    name: requiredString,
+    contact: requiredString,
     authUserId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -24,4 +20,29 @@ const admin = new mongoose.Schema(
   { timestamps: true }
 );
 
+const outreachProgram = new mongoose.Schema(
+  {
+    title: requiredString,
+    description: requiredString,
+    organizerName: requiredString,
+    organizerPhone: requiredString,
+    organization: requiredString,
+    location: requiredString,
+    targetGroup: requiredString,
+    programDate: requiredString,
+    programStartTime: requiredString,
+    estimatedAudience: { type: Number, required: true },
+    createdById: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
 export const Admin = mongoose.model("Admin", admin);
+export const OutreachProgram = mongoose.model(
+  "OutreachProgram",
+  outreachProgram
+);
