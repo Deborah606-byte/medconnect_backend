@@ -8,6 +8,7 @@ export const APP_LOG = path.join(LOGS_DIR, "app.log");
 export const REQUEST_LOG = path.join(LOGS_DIR, "request.log");
 export const STAFF_ROLES = ["Admin", "Staff"] as const;
 export const GENDERS = ["Male", "Female", "Other"] as const;
+export const OUTREACH_ACTIONS = ["Participate", "Volunteer"] as const;
 export const MARITAL_STATUSES = [
   "Single",
   "Married",
@@ -26,7 +27,16 @@ export const CORS_OPTIONS = {
 
 export const URLS = {
   root: "/api",
-  chps: { root: "/chps-compound", all: "/", one: "/:id" },
+  chps: {
+    root: "/chps-compound",
+    all: "/",
+    one: "/:id",
+    inventory: { all: "/:id/inventories", one: "/:id/inventory/:vid" },
+    outreachParticipation: {
+      all: "/:id/outreach-participations",
+      one: "/:id/outreach-participations/:pid",
+    },
+  },
   staff: {
     root: "/staff",
     all: "/",
@@ -70,6 +80,10 @@ export const URLS = {
     all: "/",
     one: "/:id",
     me: "/me",
+    outreach: {
+      all: "/:id/outreach-programs",
+      one: "/:id/outreach-programs/:pid",
+    },
   },
 };
 

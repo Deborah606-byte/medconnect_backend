@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { OUTREACH_ACTIONS } from "../../config/constants";
 
 const requiredString = {
   type: String,
@@ -53,4 +54,27 @@ chpsCompound.methods.getInitials = function (): string {
   return initials.toUpperCase();
 };
 
+const outreachParticipation = new mongoose.Schema(
+  {
+    outreachProgramId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "OutreachProgram",
+      required: true,
+    },
+    chpsCompoundId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ChpsCompound",
+      required: true,
+    },
+    choice: { type: String, enum: OUTREACH_ACTIONS, required: true },
+    supportType: { type: String, required: false },
+    status: { type: Boolean, required: true },
+  },
+  { timestamps: true }
+);
+
 export const ChpsCompound = mongoose.model("ChpsCompound", chpsCompound);
+export const OutreachParticipation = mongoose.model(
+  "OutreachParticipation",
+  outreachParticipation
+);

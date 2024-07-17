@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../config/env";
@@ -49,6 +50,15 @@ class AuthUtility {
     if (this.isTokenBlacklisted(token)) return { valid: false };
     const data = this.decodeToken(token);
     return { valid: !!data, data };
+  }
+
+  public generatetempPassword() {
+    return crypto
+      .randomBytes(this.bcryptRounds)
+      .toString("base64")
+      .slice(0, this.bcryptRounds)
+      .replace(/\+/g, "0")
+      .replace(/\//g, "0");
   }
 }
 
