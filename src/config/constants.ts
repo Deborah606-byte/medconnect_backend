@@ -26,7 +26,12 @@ export const CORS_OPTIONS = {
 
 export const URLS = {
   root: "/api",
-  chps: { root: "/chps-compound", all: "/", one: "/:id" },
+  chps: {
+    root: "/chps-compound",
+    all: "/",
+    one: "/:id",
+    inventory: { all: "/:id/inventory", one: "/:id/inventory/:vid" },
+  },
   staff: {
     root: "/staff",
     all: "/",
@@ -70,6 +75,10 @@ export const URLS = {
     all: "/",
     one: "/:id",
     me: "/me",
+    outreach: {
+      all: "/:id/outreach-programs",
+      one: "/:id/outreach-programs/:pid",
+    },
   },
 };
 

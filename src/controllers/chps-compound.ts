@@ -13,10 +13,19 @@ import type {
 } from "../types/chps-compound";
 import AppError from "../utils/app-error";
 import { StatusCodes } from "http-status-codes";
+import {
+  createInventory,
+  fetchChpsInventory,
+  fetchInventories,
+  updateChpsInventory,
+  deleteChpsInventory,
+} from "../db/queries/inventory";
 
 export const createCompound = catchAsync(async (req, res) => {
   const data = req.body as ChpsCompundData;
+  //gen temp password
   const response = await createChpsCompound(data);
+  // send welcome email
   return res.json({ status: STATUSES.SUCCESS, data: response });
 });
 
@@ -53,4 +62,46 @@ export const deleteCompound = catchAsync(async (req, res, next) => {
 
   await deleteChpsCompound(compound._id);
   return res.status(204).json({ status: STATUSES.SUCCESS });
+});
+
+export const addInventory = catchAsync(async (req, res) => {
+  const chpsCompoundId = req.params.id;
+  const inventory = await createInventory({ ...req.body, chpsCompoundId });
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ status: STATUSES.SUCCESS, data: inventory });
+});
+
+export const getInventories = catchAsync(async (req, res) => {
+  const chpsCompoundId = req.params.id;
+  const compounds = await fetchInventories(chpsCompoundId);
+  res.json({ status: STATUSES.SUCCESS, data: compounds });
+});
+
+export const getInventory = catchAsync(async (req, res, next) => {
+  const { id, vid } = req.params;
+  const inventory = await fetchChpsInventory(id, vid);
+  if (!inventory) {
+    return next(new AppError("Inventory not found", StatusCodes.NOT_FOUND));
+  }
+  return res.json({ status: STATUSES.SUCCESS, data: inventory });
+});
+
+export const updateInventory = catchAsync(async (req, res, next) => {
+  const { id, vid } = req.params;
+  const updatedInventory = await updateChpsInventory(id, vid, req.body);
+
+  if (!updatedInventory) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+  res.json({ status: STATUSES.SUCCESS, data: updatedInventory });
+});
+
+export const deleteInventory = catchAsync(async (req, res, next) => {
+  const { id, vid } = req.params;
+  const inventory = await deleteChpsInventory(id, vid);
+  if (!inventory) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+  return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
 });
