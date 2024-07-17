@@ -70,6 +70,7 @@ export const deleteCompound = catchAsync(async (req, res, next) => {
   return res.status(204).json({ status: STATUSES.SUCCESS });
 });
 
+// inventory
 export const addInventory = catchAsync(async (req, res) => {
   const chpsCompoundId = req.params.id;
   const inventory = await createInventory({ ...req.body, chpsCompoundId });
@@ -112,6 +113,7 @@ export const deleteInventory = catchAsync(async (req, res, next) => {
   return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
 });
 
+// outreach
 export const addOutreachParticipation = catchAsync(async (req, res) => {
   const chpsCompoundId = req.params.id;
   const data = req.body;

@@ -38,10 +38,12 @@ router
 
 router
   .route(URLS.admin.outreach.all)
+  .all(authorizeAdmin)
   .get(getOutreachPrograms)
   .post(validateOutreachProgramData, addOutreachProgram);
 router
   .route(URLS.admin.outreach.one)
+  .all(authorizeAdmin)
   .get(getOutreachProgram)
   .delete(removeOutreachProgram)
   .patch(validateOutreachProgramData, editOutreachProgram);

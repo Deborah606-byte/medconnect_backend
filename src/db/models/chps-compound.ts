@@ -66,7 +66,7 @@ const outreachParticipation = new mongoose.Schema(
       ref: "ChpsCompound",
       required: true,
     },
-    type: { type: String, enum: OUTREACH_ACTIONS, required: true },
+    choice: { type: String, enum: OUTREACH_ACTIONS, required: true },
     supportType: { type: String, required: false },
     status: { type: Boolean, required: true },
   },

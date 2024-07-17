@@ -31,10 +31,10 @@ export const URLS = {
     root: "/chps-compound",
     all: "/",
     one: "/:id",
-    inventory: { all: "/:id/inventory", one: "/:id/inventory/:vid" },
+    inventory: { all: "/:id/inventories", one: "/:id/inventory/:vid" },
     outreachParticipation: {
       all: "/:id/outreach-participations",
-      one: "/:id/outreach-participations/pid",
+      one: "/:id/outreach-participations/:pid",
     },
   },
   staff: {
