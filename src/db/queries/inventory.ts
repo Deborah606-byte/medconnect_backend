@@ -10,7 +10,7 @@ export const fetchInventoryById = async (id: string) =>
   await Inventory.findById(id);
 
 export const fetchChpsInventory = async (chpsId: string, id: string) =>
-  await Inventory.find({ chpsCompoundId: chpsId, _id: id });
+  await Inventory.findOne({ chpsCompoundId: chpsId, _id: id });
 
 export const deleteChpsInventory = async (chpsId: string, id: string) =>
   await Inventory.findOneAndDelete({ chpsCompoundId: chpsId, _id: id });

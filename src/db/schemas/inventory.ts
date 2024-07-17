@@ -7,6 +7,6 @@ export const inventorySchema = z
     inStock: z.number(),
     receivedDate: z.string(),
     expiryDate: z.string(),
-    manafacturer: z.string(),
+    manufacturer: z.string(),
   })
   .strict();
