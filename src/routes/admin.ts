@@ -1,9 +1,10 @@
 import express from "express";
 import { URLS } from "../config/constants";
-import { authorize, authorizeAdmin } from "../middleware/auth-requests";
+import { authorizeAdmin } from "../middleware/auth-requests";
 import {
   validateAdminData,
   validateUpdateAdminData,
+  validateOutreachProgramData,
 } from "../middleware/validators";
 import {
   addAdmin,
@@ -12,6 +13,12 @@ import {
   editAdmin,
   removeAdmin,
   fetchCurrentAdmin,
+  //
+  addOutreachProgram,
+  getOutreachProgram,
+  getOutreachPrograms,
+  editOutreachProgram,
+  removeOutreachProgram,
 } from "../controllers/admin";
 
 const router = express.Router();
@@ -28,5 +35,15 @@ router
   .get(fetchAdmin)
   .put(validateUpdateAdminData, editAdmin)
   .delete(removeAdmin);
+
+router
+  .route(URLS.admin.outreach.all)
+  .get(getOutreachPrograms)
+  .post(validateOutreachProgramData, addOutreachProgram);
+router
+  .route(URLS.admin.outreach.one)
+  .get(getOutreachProgram)
+  .delete(removeOutreachProgram)
+  .patch(validateOutreachProgramData, editOutreachProgram);
 
 export const admin = router;
