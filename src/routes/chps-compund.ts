@@ -11,11 +11,14 @@ import {
   getInventories,
   updateInventory,
   deleteInventory,
+  addOutreachParticipation,
+  updateOutreachParticipation,
 } from "../controllers/chps-compound";
 import {
   validateChpsCompoundData,
   validateChpsUpdateData,
   validateInventoryData,
+  validateOutreachParticipationData,
 } from "../middleware/validators";
 import { authorizeAdmin } from "../middleware/auth-requests";
 
@@ -42,5 +45,16 @@ router
   .get(getInventory)
   .patch(validateInventoryData, updateInventory)
   .delete(deleteInventory);
+
+router.post(
+  URLS.chps.outreachParticipation.all,
+  validateOutreachParticipationData,
+  addOutreachParticipation
+);
+router.patch(
+  URLS.chps.outreachParticipation.one,
+  validateOutreachParticipationData,
+  updateOutreachParticipation
+);
 
 export const chps = router;

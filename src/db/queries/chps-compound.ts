@@ -1,4 +1,4 @@
-import { ChpsCompound } from "../models/chps-compound";
+import { ChpsCompound, OutreachParticipation } from "../models/chps-compound";
 import { createUser } from "./user";
 import { createRole, createStaff } from "./staff";
 import { checkUniques } from "./index";
@@ -6,6 +6,7 @@ import type { ObjectId } from "mongodb";
 import type {
   ChpsCompundData,
   UpdateChpsCompoundData,
+  OutreachParticipationData,
   StaffData,
 } from "../../types/chps-compound";
 
@@ -53,3 +54,28 @@ export const getChpsCompoundByAuthId = async (id: string) =>
   await ChpsCompound.findOne({ authUserId: id });
 export const deleteChpsCompound = async (id: ObjectId) =>
   await ChpsCompound.findByIdAndDelete(id);
+
+//OutreachParticipation
+export const createParticipation = async (
+  id: string,
+  data: OutreachParticipationData
+) => await OutreachParticipation.create({ ...data, chpsCompoundId: id });
+export const updateParticipation = async (
+  chpsId: string,
+  pid: string,
+  data: OutreachParticipationData
+) =>
+  await OutreachParticipation.findOneAndUpdate(
+    {
+      _id: pid,
+      chpsCompoundId: chpsId,
+    },
+    data,
+    { new: true }
+  );
+
+export const deactivateActiveParticipations = async (id: string) =>
+  await OutreachParticipation.updateMany(
+    { outreachProgramId: id, status: true },
+    { $set: { status: false } }
+  );

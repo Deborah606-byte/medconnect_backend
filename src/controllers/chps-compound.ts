@@ -6,6 +6,8 @@ import {
   getAllChpsCompounds,
   deleteChpsCompound,
   updateChpsCompound,
+  createParticipation,
+  updateParticipation,
 } from "../db/queries/chps-compound";
 import type {
   ChpsCompundData,
@@ -105,3 +107,25 @@ export const deleteInventory = catchAsync(async (req, res, next) => {
   }
   return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
 });
+
+export const addOutreachParticipation = catchAsync(async (req, res) => {
+  const chpsCompoundId = req.params.id;
+  const data = req.body;
+  const participation = await createParticipation(chpsCompoundId, data);
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ status: STATUSES.SUCCESS, data: participation });
+});
+
+export const updateOutreachParticipation = catchAsync(
+  async (req, res, next) => {
+    const { id, pid } = req.params;
+    const data = req.body;
+    const participation = await updateParticipation(id, pid, data);
+
+    if (!participation) {
+      return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+    }
+    res.json({ status: STATUSES.SUCCESS, data: participation });
+  }
+);

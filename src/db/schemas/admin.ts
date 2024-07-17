@@ -45,7 +45,6 @@ export const outreachProgramSchema = z
 export const outreachParticipationSchema = z
   .object({
     outreachProgramId: z.string(),
-    chpsCompoundId: z.string(),
     choice: z.enum(OUTREACH_ACTIONS),
     supportType: z.string().optional(),
     status: z.boolean(),
