@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { adminSchema, updateAmdinSchema } from "../db/schemas/admin";
 import { staffSchema, roleSchema } from "../db/schemas/staff";
+import { inventorySchema } from "../db/schemas/inventory";
 import {
   chpsCompoundSchema,
   updateChpsCompoundSchema,
@@ -67,6 +68,7 @@ export const validateUpdateStaffData = validateData(
   staffSchema.merge(z.object({ staffId: z.string() }))
 );
 //chps
+export const validateInventoryData = validateData(inventorySchema);
 export const validateChpsUpdateData = validateData(updateChpsCompoundSchema);
 export const validateChpsRequestParams = validateParams(standardRequestParams);
 export const validateChpsCompoundData = validateData(

@@ -43,7 +43,7 @@ export const updateChpsPatient = async (
   });
 
   if (!updateData) return null;
-  return Patient.findByIdAndUpdate(id, updateData, { new: true });
+  return await Patient.findByIdAndUpdate(id, updateData, { new: true });
 };
 export class PatientResourceQuery<T> {
   private readonly model: Model<T>;

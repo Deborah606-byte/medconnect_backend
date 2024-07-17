@@ -6,10 +6,16 @@ import {
   getCompounds,
   deleteCompound,
   updateCompound,
+  addInventory,
+  getInventory,
+  getInventories,
+  updateInventory,
+  deleteInventory,
 } from "../controllers/chps-compound";
 import {
   validateChpsCompoundData,
   validateChpsUpdateData,
+  validateInventoryData,
 } from "../middleware/validators";
 import { authorizeAdmin } from "../middleware/auth-requests";
 
@@ -26,5 +32,15 @@ router
   .get(getCompound)
   .put(validateChpsUpdateData, updateCompound)
   .delete(authorizeAdmin, deleteCompound);
+
+router
+  .route(URLS.chps.inventory.all)
+  .get(getInventories)
+  .post(validateInventoryData, addInventory);
+router
+  .route(URLS.chps.inventory.one)
+  .get(getInventory)
+  .patch(validateInventoryData, updateInventory)
+  .delete(deleteInventory);
 
 export const chps = router;

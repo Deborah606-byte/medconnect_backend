@@ -3,6 +3,7 @@ import { STAFF_ROLES } from "../config/constants";
 import { updateAmdinSchema, createAdminSchema } from "../db/schemas/admin";
 import { roleSchema, staffSchema } from "../db/schemas/staff";
 import { userSchema, resetPasswordDataSchema } from "../db/schemas/user";
+import { inventorySchema } from "../db/schemas/inventory";
 import {
   chpsCompoundSchema,
   updateChpsCompoundSchema,
@@ -18,6 +19,7 @@ export type StaffData = z.infer<typeof staffSchema>;
 export type ResetPasswordData = z.infer<typeof resetPasswordDataSchema>;
 export type ChpsCompundData = ChpsData & UserData;
 export type UpdateChpsCompoundData = z.infer<typeof updateChpsCompoundSchema>;
+export type InventoryData = z.infer<typeof inventorySchema>;
 export type TokenData = {
   user: string;
   actor: string;
