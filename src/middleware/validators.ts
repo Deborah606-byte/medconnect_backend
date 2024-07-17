@@ -78,7 +78,9 @@ export const validateInventoryData = validateData(inventorySchema);
 export const validateChpsUpdateData = validateData(updateChpsCompoundSchema);
 export const validateChpsRequestParams = validateParams(standardRequestParams);
 export const validateChpsCompoundData = validateData(
-  chpsCompoundSchema.omit({ authUserId: true }).merge(userSchema)
+  chpsCompoundSchema
+    .omit({ authUserId: true })
+    .merge(userSchema.omit({ password: true }))
 );
 export const validateOutreachParticipationData = validateData(
   outreachParticipationSchema

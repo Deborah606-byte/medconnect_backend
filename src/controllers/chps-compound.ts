@@ -1,5 +1,9 @@
+import AppError from "../utils/app-error";
+import { StatusCodes } from "http-status-codes";
 import { catchAsync } from "../utils/catch-async";
 import { STATUSES } from "../config/constants";
+import { authUtil } from "../utils/auth";
+import { NewUserNotification } from "../services/mail";
 import {
   createChpsCompound,
   getChpsCompoundById,
@@ -13,8 +17,6 @@ import type {
   ChpsCompundData,
   UpdateChpsCompoundData,
 } from "../types/chps-compound";
-import AppError from "../utils/app-error";
-import { StatusCodes } from "http-status-codes";
 import {
   createInventory,
   fetchChpsInventory,
@@ -24,10 +26,12 @@ import {
 } from "../db/queries/inventory";
 
 export const createCompound = catchAsync(async (req, res) => {
-  const data = req.body as ChpsCompundData;
-  //gen temp password
+  const password = authUtil.generatetempPassword();
+  const data = { ...req.body, password } as ChpsCompundData;
   const response = await createChpsCompound(data);
-  // send welcome email
+
+  const { name, email } = data;
+  await new NewUserNotification({ email, name, password }).sendWelcomeMail();
   return res.json({ status: STATUSES.SUCCESS, data: response });
 });
 

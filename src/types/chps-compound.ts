@@ -21,6 +21,7 @@ export type OutreachProgramData = z.infer<typeof outreachProgramSchema>;
 export type OutreachParticipationData = z.infer<
   typeof outreachParticipationSchema
 >;
+
 export type LoginData = z.infer<typeof userSchema>;
 export type UserData = z.infer<typeof userSchema>;
 export type RoleData = z.infer<typeof roleSchema>;
