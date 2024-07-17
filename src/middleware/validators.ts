@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { adminSchema, updateAmdinSchema } from "../db/schemas/admin";
+import {
+  adminSchema,
+  outreachParticipationSchema,
+  outreachProgramSchema,
+  updateAmdinSchema,
+} from "../db/schemas/admin";
 import { staffSchema, roleSchema } from "../db/schemas/staff";
 import { inventorySchema } from "../db/schemas/inventory";
 import {
@@ -57,6 +62,7 @@ export const validateLoginData = validateData(userSchema);
 export const validateForgotPasswordData = validateData(forgotPasswordData);
 export const validateResetPasswordData = validateData(resetPasswordDataSchema);
 //admin
+export const validateOutreachProgramData = validateData(outreachProgramSchema);
 export const validateUpdateAdminData = validateData(updateAmdinSchema);
 export const validateAdminData = validateData(
   adminSchema.omit({ authUserId: true })
@@ -73,6 +79,9 @@ export const validateChpsUpdateData = validateData(updateChpsCompoundSchema);
 export const validateChpsRequestParams = validateParams(standardRequestParams);
 export const validateChpsCompoundData = validateData(
   chpsCompoundSchema.omit({ authUserId: true }).merge(userSchema)
+);
+export const validateOutreachParticipationData = validateData(
+  outreachParticipationSchema
 );
 // Patient
 export const validatePatientData = validateData(patientSchema);

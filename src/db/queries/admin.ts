@@ -1,8 +1,9 @@
-import { Admin } from "../models/admin";
+import { Admin, OutreachProgram } from "../models/admin";
 import { createUser } from "./user";
 import type {
   UpdateAdminData,
   CreateAdminData,
+  OutreachProgramData,
 } from "../../types/chps-compound";
 
 export const createAdmin = async (data: CreateAdminData) => {
@@ -18,3 +19,18 @@ export const deleteAdmin = async (id: string) =>
   await Admin.findByIdAndDelete(id);
 export const updateAdmin = async (id: string, data: UpdateAdminData) =>
   await Admin.findByIdAndUpdate(id, data, { new: true });
+
+// outreach programs
+export const createOutreachProgram = async (
+  adminId: string,
+  data: OutreachProgramData
+) => await OutreachProgram.create({ ...data, createdById: adminId });
+export const fetchOutreachPrograms = async () => await OutreachProgram.find({});
+export const fetchOutreachProgram = async (id: string) =>
+  await OutreachProgram.findById(id);
+export const updateOutreachProgram = async (
+  id: string,
+  data: OutreachProgramData
+) => await OutreachProgram.findByIdAndUpdate(id, data, { new: true });
+export const deleteOutreachProgram = async (id: string) =>
+  await OutreachProgram.findByIdAndDelete(id);

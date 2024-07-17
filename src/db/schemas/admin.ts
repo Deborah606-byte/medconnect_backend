@@ -1,5 +1,5 @@
-import { describe } from "node:test";
 import { z } from "zod";
+import { OUTREACH_ACTIONS } from "../../config/constants";
 
 export const adminSchema = z
   .object({
@@ -27,7 +27,7 @@ export const updateAmdinSchema = z
   })
   .strict();
 
-export const outreachPrograms = z
+export const outreachProgramSchema = z
   .object({
     title: z.string(),
     description: z.string(),
@@ -37,5 +37,17 @@ export const outreachPrograms = z
     location: z.string(),
     targetGroup: z.string(),
     estimatedAudience: z.number(),
+    programDate: z.string(),
+    programStartTime: z.string(),
+  })
+  .strict();
+
+export const outreachParticipationSchema = z
+  .object({
+    outreachProgramId: z.string(),
+    chpsCompoundId: z.string(),
+    choice: z.enum(OUTREACH_ACTIONS),
+    supportType: z.string().optional(),
+    status: z.boolean(),
   })
   .strict();

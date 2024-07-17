@@ -8,8 +8,17 @@ import {
   getAdmins,
   updateAdmin,
   deleteAdmin,
+  createOutreachProgram,
+  fetchOutreachProgram,
+  fetchOutreachPrograms,
+  updateOutreachProgram,
+  deleteOutreachProgram,
 } from "../db/queries/admin";
-import type { UpdateAdminData, CreateAdminData } from "../types/chps-compound";
+import type {
+  UpdateAdminData,
+  CreateAdminData,
+  OutreachProgramData,
+} from "../types/chps-compound";
 
 export const addAdmin = catchAsync(async (req, res) => {
   const data = req.body as CreateAdminData;
@@ -55,6 +64,49 @@ export const removeAdmin = catchAsync(async (req, res, next) => {
   const deletedAdmin = await deleteAdmin(id);
 
   if (!deletedAdmin) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+  return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
+});
+
+// outreach program
+export const addOutreachProgram = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const data = req.body as OutreachProgramData;
+  const program = await createOutreachProgram(id, data);
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ status: STATUSES.SUCCESS, data: program });
+});
+
+export const getOutreachProgram = catchAsync(async (req, res, next) => {
+  const program = await fetchOutreachProgram(req.params.pid);
+  if (!program) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+  return res.json({ status: STATUSES.SUCCESS, data: program });
+});
+
+export const getOutreachPrograms = catchAsync(async (req, res) => {
+  const programs = await fetchOutreachPrograms();
+  return res.json({ status: STATUSES.SUCCESS, data: programs });
+});
+
+export const editOutreachProgram = catchAsync(async (req, res, next) => {
+  const pid = req.params.pid;
+  const data = req.body as OutreachProgramData;
+  const program = await updateOutreachProgram(pid, data);
+
+  if (!program) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+  return res.json({ status: STATUSES.SUCCESS, data: program });
+});
+
+export const removeOutreachProgram = catchAsync(async (req, res, next) => {
+  const program = await deleteOutreachProgram(req.params.pid);
+
+  if (!program) {
     return next(new AppError("Not found", StatusCodes.NOT_FOUND));
   }
   return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
