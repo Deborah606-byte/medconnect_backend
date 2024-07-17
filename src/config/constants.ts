@@ -32,6 +32,10 @@ export const URLS = {
     all: "/",
     one: "/:id",
     inventory: { all: "/:id/inventory", one: "/:id/inventory/:vid" },
+    outreachParticipation: {
+      all: "/:id/outreach-participations",
+      one: "/:id/outreach-participations/pid",
+    },
   },
   staff: {
     root: "/staff",

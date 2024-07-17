@@ -1,5 +1,6 @@
 import { Admin, OutreachProgram } from "../models/admin";
 import { createUser } from "./user";
+import { deactivateActiveParticipations } from "./chps-compound";
 import type {
   UpdateAdminData,
   CreateAdminData,
@@ -32,5 +33,7 @@ export const updateOutreachProgram = async (
   id: string,
   data: OutreachProgramData
 ) => await OutreachProgram.findByIdAndUpdate(id, data, { new: true });
-export const deleteOutreachProgram = async (id: string) =>
-  await OutreachProgram.findByIdAndDelete(id);
+export const deleteOutreachProgram = async (id: string) => {
+  await deactivateActiveParticipations(id);
+  return await OutreachProgram.findByIdAndDelete(id);
+};
