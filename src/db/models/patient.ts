@@ -111,6 +111,7 @@ const diagnosisReport = new mongoose.Schema({
   followUpDate: Date,
   notes: requiredString,
   symptoms: requiredString,
+  finalDiagnosis: requiredString,
   recommendedTest: requiredString,
 });
 
