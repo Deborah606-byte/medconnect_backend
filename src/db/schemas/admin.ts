@@ -6,7 +6,7 @@ export const adminSchema = z
     name: z.string().min(5),
     contact: z.string().min(9),
     authUserId: z.string(),
-    profilePictureUrl: z.string(),
+    profilePictureUrl: z.string().url(),
   })
   .strict();
 
@@ -16,14 +16,14 @@ export const createAdminSchema = z
     email: z.string().email(),
     password: z.string().min(8),
     contact: z.string().min(9),
-    profilePictureUrl: z.string(),
+    profilePictureUrl: z.string().url(),
   })
   .strict();
 
 export const updateAmdinSchema = z
   .object({
     contact: z.string().min(9),
-    profilePictureUrl: z.string(),
+    profilePictureUrl: z.string().url(),
   })
   .strict();
 

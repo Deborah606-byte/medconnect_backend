@@ -11,7 +11,7 @@ export const chpsCompoundSchema = z
     operatingHours: z.string(),
     availableServices: z.array(z.string()).default([]),
     hasAcceptedTC: z.boolean(),
-    profilePictureUrl: z.string(),
+    profilePictureUrl: z.string().url(),
     authUserId: z.string(),
     createdById: z.string(),
   })
@@ -28,6 +28,6 @@ export const updateChpsCompoundSchema = z
     operatingHours: z.string(),
     availableServices: z.array(z.string()).default([]),
     hasAcceptedTC: z.boolean(),
-    profilePictureUrl: z.string(),
+    profilePictureUrl: z.string().url(),
   })
   .strict();
