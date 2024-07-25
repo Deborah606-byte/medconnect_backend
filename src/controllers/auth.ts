@@ -14,6 +14,7 @@ import {
 import { LoginService } from "../services/user";
 import type { LoginData, ResetPasswordData } from "../types/chps-compound";
 import type { Request, Response, NextFunction } from "express";
+import { getFEUrl } from "../config/env";
 
 export const login = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -68,10 +69,11 @@ export const forgotPassword = catchAsync(
     }
 
     const { token } = await createResetToken(user._id);
+    const feUrl = getFEUrl();
     const emailOptions = {
       to: email,
       subject: EMAIL.reset.subject,
-      text: EMAIL.reset.getText(token),
+      text: EMAIL.reset.getText(token, feUrl),
     };
 
     const emailService = new EmailService();

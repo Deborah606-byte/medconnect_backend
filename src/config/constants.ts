@@ -1,7 +1,5 @@
 import path from "path";
 
-const FE_URL_DEV = "http://localhost:3000";
-const FE_URL_LIVE = "";
 const LOGS_DIR = path.join(__dirname, "..", "..", "logs");
 
 export const APP_LOG = path.join(LOGS_DIR, "app.log");
@@ -19,9 +17,14 @@ export const STATUSES = {
   SUCCESS: true,
   FAILED: false,
 };
+export const FE_URLS = {
+  DEV: "http://localhost:3000",
+  VERCEL: "https://medconnect-gh.vercel.app",
+  RENDER: "https://medconnect-knb2.onrender.com",
+};
 
 export const CORS_OPTIONS = {
-  origin: [FE_URL_DEV, FE_URL_LIVE],
+  origin: Object.values(FE_URLS),
   credentials: true,
 };
 
@@ -90,10 +93,10 @@ export const URLS = {
 export const EMAIL = {
   reset: {
     subject: "Password Reset Request",
-    getText: function (token: string) {
+    getText: function (token: string, feUrl: string) {
       return `You are receiving this because you (or someone else) has requested the reset of the password for your account.\n\n
                        Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
-                       http://localhost:8000/reset/${token}\n\n
+                       ${feUrl}/reset-password?token=${token}\n\n
                        If you did not request this, please ignore this email and your password will remain unchanged.`;
     },
   },
