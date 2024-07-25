@@ -31,7 +31,7 @@ export const patientSchema = z
     email: z.string().email(),
     location: z.string(),
     district: z.string(),
-    profilePictureUrl: z.string().optional().default(""),
+    profilePictureUrl: z.string(),
     additional: additionalInfoSchema,
     emergencyContacts: z.array(emergencyInfoSchema).min(1),
   })
