@@ -9,6 +9,7 @@ import {
   validateDiagnosisReportData,
   validateVisitLogsData,
   validateAppointmentData,
+  validateMedicalHistoryData,
 } from "../middleware/validators";
 import {
   addPatient,
@@ -22,6 +23,7 @@ import {
   treatmentPlan,
   diagnosisReport,
   visitLog,
+  medicalHistory,
 } from "../controllers/patient";
 
 const router = express.Router();
@@ -99,4 +101,15 @@ router
   .patch(validateAppointmentData, appointment.editResource)
   .delete(appointment.removeResource);
 
+//medical-history
+router
+  .route(URLS.patient.medicalHistory.all)
+  .get(medicalHistory.getResources)
+  .post(validateMedicalHistoryData, medicalHistory.addResource);
+router
+  .route(URLS.patient.medicalHistory.one)
+  .all(validatePatientResourceParams)
+  .get(medicalHistory.getResource)
+  .patch(medicalHistory.editResource)
+  .delete(medicalHistory.removeResource);
 export const patient = router;

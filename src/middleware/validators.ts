@@ -25,6 +25,7 @@ import {
   treatmentPlanSchema,
   visitLogSchema,
   patientResourceParamsSchema,
+  medicalHistorySchema,
 } from "../db/schemas/patient";
 
 function validateData(schema: z.ZodObject<any, any> | z.ZodEffects<any, any>) {
@@ -92,6 +93,7 @@ export const validateAppointmentData = validateData(appointmentSchema);
 export const validateTreatmentPlanData = validateData(treatmentPlanSchema);
 export const validateDiagnosisReportData = validateData(diagnosisReportSchema);
 export const validateVisitLogsData = validateData(visitLogSchema);
+export const validateMedicalHistoryData = validateData(medicalHistorySchema);
 export const validatePatientResourceParams = validateParams(
   patientResourceParamsSchema
 );
