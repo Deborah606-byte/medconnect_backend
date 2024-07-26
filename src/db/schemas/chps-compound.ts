@@ -31,3 +31,11 @@ export const updateChpsCompoundSchema = z
     profilePictureUrl: z.string().url(),
   })
   .strict();
+
+export const addTicketSchema = z
+  .object({
+    subject: z.string(),
+    description: z.string(),
+    imageUrl: z.string().url().optional().default(""),
+  })
+  .strict();

@@ -83,6 +83,27 @@ export class PatientIdGenerator extends BaseIDGenerator<CompoundResource> {
     }
   };
 }
+export class TicketIdGenerator extends BaseIDGenerator<CompoundResource> {
+  protected readonly modelName = "Ticket";
+
+  constructor(instance: CompoundResource, idx: string) {
+    super(instance, idx);
+    this.setError();
+  }
+
+  protected generateId = async () => {
+    try {
+      const ticketCount = await mongoose.model(this.modelName).countDocuments();
+      const index = `${ticketCount + 1}`.padStart(5, "0");
+      this.currentId = this.prefix + index;
+      return true;
+    } catch (err) {
+      const { message } = err as Error;
+      logger.error({ action: "generateTicketId", msg: message });
+      return false;
+    }
+  };
+}
 
 export class PatientMiscIdGenerator extends BaseIDGenerator<CompoundResource> {
   protected modelName: string;
