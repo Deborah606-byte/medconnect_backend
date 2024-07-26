@@ -110,6 +110,6 @@ router
   .route(URLS.patient.medicalHistory.one)
   .all(validatePatientResourceParams)
   .get(medicalHistory.getResource)
-  .patch(medicalHistory.editResource)
+  .patch(validateMedicalHistoryData, medicalHistory.editResource)
   .delete(medicalHistory.removeResource);
 export const patient = router;

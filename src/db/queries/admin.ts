@@ -49,6 +49,6 @@ export const fetchChpsTickets = async (cid: string) =>
 export const fetchTicket = async (cid: string, tid: string) =>
   await Ticket.findOne({ requestedById: cid, _id: tid });
 export const updateTicket = async (tid: string, data: UpdateTicketData) =>
-  await Ticket.findByIdAndUpdate(tid, data);
+  await Ticket.findByIdAndUpdate(tid, data, { new: true });
 export const deleteTicket = async (tid: string) =>
   await Ticket.findByIdAndDelete(tid);

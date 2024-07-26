@@ -39,6 +39,7 @@ export const URLS = {
       all: "/:id/outreach-participations",
       one: "/:id/outreach-participations/:pid",
     },
+    ticket: { all: "/:id/tickets", one: "/:id/tickets/:tid" },
   },
   staff: {
     root: "/staff",
@@ -87,6 +88,7 @@ export const URLS = {
     all: "/",
     one: "/:id",
     me: "/me",
+    ticket: { all: "/:id/tickets", one: "/:id/tickets/:tid" },
     outreach: {
       all: "/:id/outreach-programs",
       one: "/:id/outreach-programs/:pid",
