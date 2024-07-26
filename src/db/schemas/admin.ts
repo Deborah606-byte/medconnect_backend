@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { OUTREACH_ACTIONS } from "../../config/constants";
+import {
+  OUTREACH_ACTIONS,
+  TICKET_PRIORITY,
+  TICKET_STATUSES,
+} from "../../config/constants";
 
 export const adminSchema = z
   .object({
@@ -53,7 +57,7 @@ export const outreachParticipationSchema = z
 
 export const updateTicketSchema = z
   .object({
-    status: z.boolean(),
-    priority: z.boolean(),
+    status: z.enum(TICKET_STATUSES),
+    priority: z.enum(TICKET_PRIORITY),
   })
   .strict();

@@ -94,7 +94,7 @@ export class TicketIdGenerator extends BaseIDGenerator<CompoundResource> {
   protected generateId = async () => {
     try {
       const ticketCount = await mongoose.model(this.modelName).countDocuments();
-      const index = `${ticketCount + 1}`.padStart(5, "0");
+      const index = `-${ticketCount + 1}`.padStart(4, "0");
       this.currentId = this.prefix + index;
       return true;
     } catch (err) {

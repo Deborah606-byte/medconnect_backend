@@ -13,8 +13,12 @@ import {
   deleteInventory,
   addOutreachParticipation,
   updateOutreachParticipation,
+  getTicket,
+  getTickets,
+  addTicket,
 } from "../controllers/chps-compound";
 import {
+  validateAddTicketData,
   validateChpsCompoundData,
   validateChpsUpdateData,
   validateInventoryData,
@@ -56,5 +60,12 @@ router.patch(
   validateOutreachParticipationData,
   updateOutreachParticipation
 );
+
+//tickets
+router
+  .route(URLS.chps.ticket.all)
+  .get(getTickets)
+  .post(validateAddTicketData, addTicket);
+router.get(URLS.chps.ticket.one, getTicket);
 
 export const chps = router;

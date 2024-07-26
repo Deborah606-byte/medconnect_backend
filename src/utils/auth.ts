@@ -29,8 +29,7 @@ class AuthUtility {
         const { iat } = this.decodeToken(token) as { iat: number };
         if (Date.now() > iat) this.tokenBlacklist.delete(token);
       }
-    }),
-      15 * 60 * 1000;
+    }, 15 * 60 * 1000);
   }
 
   public async generateHashedPassword(password: string) {

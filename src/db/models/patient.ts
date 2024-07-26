@@ -152,7 +152,7 @@ const medicalHistory = new mongoose.Schema({
   },
   description: requiredString,
   cause: requiredString,
-  hospitalizationDate: requiredString,
+  hospitalizationDate: requiredDate,
   formUrl: requiredString,
   date: requiredDate,
   hadSurgeryComplication: requiredBool,
