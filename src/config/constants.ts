@@ -1,4 +1,5 @@
 import path from "path";
+import { medicalHistory } from "../controllers/patient";
 
 const LOGS_DIR = path.join(__dirname, "..", "..", "logs");
 
@@ -68,6 +69,10 @@ export const URLS = {
     },
     visitLog: { all: "/:pid/visit-logs", one: "/:pid/visit-logs/:aid" },
     appointment: { all: "/:pid/appointments", one: "/:pid/appointments/:aid" },
+    medicalHistory: {
+      all: "/:pid/medical-history",
+      one: "/:pid/medical-history/:aid",
+    },
   },
   inquiry: { root: "inquiries", submit: "/submit-inquiry" },
   auth: {

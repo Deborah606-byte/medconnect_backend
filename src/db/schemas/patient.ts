@@ -108,3 +108,17 @@ export const patientResourceParamsSchema = z
     aid: z.string().min(24),
   })
   .strict();
+
+export const medicalHistorySchema = z
+  .object({
+    description: z.string(),
+    date: z.string(),
+    cause: z.string(),
+    wasSurgeryRequired: z.boolean(),
+    hasBreathingProblem: z.boolean(),
+    hasSkinProblem: z.boolean(),
+    hospitalizationDate: z.string(),
+    hadSurgeryComplication: z.boolean(),
+    formUrl: z.string().url(),
+  })
+  .strict();
