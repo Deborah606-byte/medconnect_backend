@@ -24,6 +24,11 @@ import {
   updateChpsInventory,
   deleteChpsInventory,
 } from "../db/queries/inventory";
+import {
+  createTicket,
+  fetchChpsTickets,
+  fetchTicket,
+} from "../db/queries/admin";
 
 export const createCompound = catchAsync(async (req, res) => {
   const password = authUtil.generatetempPassword();
@@ -135,3 +140,29 @@ export const updateOutreachParticipation = catchAsync(
     res.json({ status: STATUSES.SUCCESS, data: participation });
   }
 );
+
+//ticket
+export const addTicket = catchAsync(async (req, res) => {
+  const chpsId = req.params.id;
+  const data = req.body;
+  const ticket = await createTicket(chpsId, data);
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ status: STATUSES.SUCCESS, data: ticket });
+});
+
+export const getTickets = catchAsync(async (req, res) => {
+  const chpsId = req.params.id;
+  const tickets = await fetchChpsTickets(chpsId);
+  return res.json({ status: STATUSES.SUCCESS, data: tickets });
+});
+
+export const getTicket = catchAsync(async (req, res, next) => {
+  const { id, tid } = req.params;
+  const ticket = await fetchTicket(id, tid);
+
+  if (!ticket) {
+    return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  }
+  return res.json({ status: STATUSES.SUCCESS, data: ticket });
+});

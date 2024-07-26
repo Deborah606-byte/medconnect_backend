@@ -5,6 +5,8 @@ import { PatientIdGenerator, PatientMiscIdGenerator } from "../../services/id";
 import { StatusCodes } from "http-status-codes";
 
 const requiredString = { type: String, required: true };
+const requiredBool = { type: Boolean, required: true };
+const requiredDate = { type: Date, required: true };
 
 const additionals = new mongoose.Schema({
   bloodGroup: requiredString,
@@ -79,7 +81,7 @@ const prescription = new mongoose.Schema({
   prescriptionId: requiredString,
   notes: requiredString,
   healthOfficialName: requiredString,
-  date: Date,
+  date: requiredDate,
   medication: { type: medication, required: true },
 });
 
@@ -91,8 +93,8 @@ const treatmentPlan = new mongoose.Schema({
   },
   treatmentPlanId: requiredString,
   name: requiredString,
-  startDate: { type: Date, required: true },
-  endDate: { type: Date, required: true },
+  startDate: requiredDate,
+  endDate: requiredDate,
   objective: requiredString,
   medicationName: requiredString,
   followUpSchedule: requiredString,
@@ -107,10 +109,11 @@ const diagnosisReport = new mongoose.Schema({
   },
   diagnosisReportId: requiredString,
   doctorName: requiredString,
-  date: Date,
-  followUpDate: Date,
+  date: requiredDate,
+  followUpDate: requiredDate,
   notes: requiredString,
   symptoms: requiredString,
+  finalDiagnosis: requiredString,
   recommendedTest: requiredString,
 });
 
@@ -121,7 +124,7 @@ const visitLog = new mongoose.Schema({
     required: true,
   },
   visitLogId: requiredString,
-  date: Date,
+  date: requiredDate,
   purpose: requiredString,
   official: requiredString,
   notes: requiredString,
@@ -136,10 +139,26 @@ const appointment = new mongoose.Schema({
   date: requiredString,
   official: requiredString,
   isClosed: {
-    type: Boolean,
-    required: false,
+    ...requiredBool,
     default: false,
   },
+});
+
+const medicalHistory = new mongoose.Schema({
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Patient",
+    required: true,
+  },
+  description: requiredString,
+  cause: requiredString,
+  hospitalizationDate: requiredDate,
+  formUrl: requiredString,
+  date: requiredDate,
+  hadSurgeryComplication: requiredBool,
+  wasSurgeryRequired: requiredBool,
+  hasBreathingProblem: requiredBool,
+  hasSkinProblem: requiredBool,
 });
 
 patient.pre("validate", async function (next) {
@@ -230,6 +249,7 @@ export const Prescription = mongoose.model("Prescription", prescription);
 export const TreatmentPlan = mongoose.model("TreatmentPlan", treatmentPlan);
 export const VisitLog = mongoose.model("VisitLog", visitLog);
 export const Appointment = mongoose.model("Appointment", appointment);
+export const MedicalHistory = mongoose.model("MedicalHistory", medicalHistory);
 export const DiagnosisReport = mongoose.model(
   "DiagnosisReport",
   diagnosisReport

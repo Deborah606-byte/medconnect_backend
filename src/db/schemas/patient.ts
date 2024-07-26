@@ -31,7 +31,7 @@ export const patientSchema = z
     email: z.string().email(),
     location: z.string(),
     district: z.string(),
-    profilePictureUrl: z.string().optional().default(""),
+    profilePictureUrl: z.string().url(),
     additional: additionalInfoSchema,
     emergencyContacts: z.array(emergencyInfoSchema).min(1),
   })
@@ -82,6 +82,7 @@ export const diagnosisReportSchema = z
     followUpDate: z.string(),
     notes: z.string(),
     symptoms: z.string(),
+    finalDiagnosis: z.string(),
     recommendedTest: z.string(),
   })
   .strict();
@@ -105,5 +106,19 @@ export const patientResourceParamsSchema = z
   .object({
     pid: z.string().min(24),
     aid: z.string().min(24),
+  })
+  .strict();
+
+export const medicalHistorySchema = z
+  .object({
+    description: z.string(),
+    date: z.string(),
+    cause: z.string(),
+    wasSurgeryRequired: z.boolean(),
+    hasBreathingProblem: z.boolean(),
+    hasSkinProblem: z.boolean(),
+    hospitalizationDate: z.string(),
+    hadSurgeryComplication: z.boolean(),
+    formUrl: z.string().url(),
   })
   .strict();

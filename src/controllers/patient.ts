@@ -14,6 +14,7 @@ import {
   DiagnosisReportQuery,
   VisitLogQuery,
   AppointmentQuery,
+  MedicalHistoryQuery,
 } from "../db/queries/patient";
 import type { PatientResourceQueryInstance } from "../db/queries/patient";
 import type { PatientData, PatientResourceParams } from "../types/patient";
@@ -127,4 +128,7 @@ export const appointment = new PatientResourceController(AppointmentQuery);
 export const treatmentPlan = new PatientResourceController(TreatmentPlanQuery);
 export const diagnosisReport = new PatientResourceController(
   DiagnosisReportQuery
+);
+export const medicalHistory = new PatientResourceController(
+  MedicalHistoryQuery
 );

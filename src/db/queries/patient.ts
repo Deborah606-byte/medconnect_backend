@@ -4,17 +4,19 @@ import {
   DiagnosisReport,
   Patient,
   VisitLog,
+  MedicalHistory,
 } from "../models/patient";
 import { Prescription, TreatmentPlan } from "../models/patient";
-import type { Document, Model, ObjectId } from "mongoose";
+import type { Model } from "mongoose";
 import type {
   PatientData,
   PrescriptionData,
   TreatmentPlanData,
   PatientResourceParams,
+  MedicalHistoryData,
 } from "../../types/patient";
 
-type ResourceData = PrescriptionData | TreatmentPlanData;
+type ResourceData = PrescriptionData | TreatmentPlanData | MedicalHistoryData;
 
 export const createPatient = async (data: PatientData) =>
   await Patient.create(data);
@@ -83,5 +85,6 @@ export const PresciptionQuery = new PatientResourceQuery(Prescription);
 export const DiagnosisReportQuery = new PatientResourceQuery(DiagnosisReport);
 export const VisitLogQuery = new PatientResourceQuery(VisitLog);
 export const AppointmentQuery = new PatientResourceQuery(Appointment);
+export const MedicalHistoryQuery = new PatientResourceQuery(MedicalHistory);
 
 export type PatientResourceQueryInstance<T> = PatientResourceQuery<T>;

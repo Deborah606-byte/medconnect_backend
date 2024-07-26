@@ -4,10 +4,12 @@ import {
   outreachParticipationSchema,
   outreachProgramSchema,
   updateAmdinSchema,
+  updateTicketSchema,
 } from "../db/schemas/admin";
 import { staffSchema, roleSchema } from "../db/schemas/staff";
 import { inventorySchema } from "../db/schemas/inventory";
 import {
+  addTicketSchema,
   chpsCompoundSchema,
   updateChpsCompoundSchema,
 } from "../db/schemas/chps-compound";
@@ -25,6 +27,7 @@ import {
   treatmentPlanSchema,
   visitLogSchema,
   patientResourceParamsSchema,
+  medicalHistorySchema,
 } from "../db/schemas/patient";
 
 function validateData(schema: z.ZodObject<any, any> | z.ZodEffects<any, any>) {
@@ -64,6 +67,7 @@ export const validateResetPasswordData = validateData(resetPasswordDataSchema);
 //admin
 export const validateOutreachProgramData = validateData(outreachProgramSchema);
 export const validateUpdateAdminData = validateData(updateAmdinSchema);
+export const validateUpdateTicketData = validateData(updateTicketSchema);
 export const validateAdminData = validateData(
   adminSchema.omit({ authUserId: true })
 );
@@ -77,6 +81,7 @@ export const validateUpdateStaffData = validateData(
 export const validateInventoryData = validateData(inventorySchema);
 export const validateChpsUpdateData = validateData(updateChpsCompoundSchema);
 export const validateChpsRequestParams = validateParams(standardRequestParams);
+export const validateAddTicketData = validateData(addTicketSchema);
 export const validateChpsCompoundData = validateData(
   chpsCompoundSchema
     .omit({ authUserId: true })
@@ -92,6 +97,7 @@ export const validateAppointmentData = validateData(appointmentSchema);
 export const validateTreatmentPlanData = validateData(treatmentPlanSchema);
 export const validateDiagnosisReportData = validateData(diagnosisReportSchema);
 export const validateVisitLogsData = validateData(visitLogSchema);
+export const validateMedicalHistoryData = validateData(medicalHistorySchema);
 export const validatePatientResourceParams = validateParams(
   patientResourceParamsSchema
 );
