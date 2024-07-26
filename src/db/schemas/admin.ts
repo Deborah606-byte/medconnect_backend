@@ -50,3 +50,10 @@ export const outreachParticipationSchema = z
     status: z.boolean(),
   })
   .strict();
+
+export const updateTicketSchema = z
+  .object({
+    status: z.boolean(),
+    priority: z.boolean(),
+  })
+  .strict();

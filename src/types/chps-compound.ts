@@ -5,11 +5,13 @@ import {
   createAdminSchema,
   outreachProgramSchema,
   outreachParticipationSchema,
+  updateTicketSchema,
 } from "../db/schemas/admin";
 import { roleSchema, staffSchema } from "../db/schemas/staff";
 import { userSchema, resetPasswordDataSchema } from "../db/schemas/user";
 import { inventorySchema } from "../db/schemas/inventory";
 import {
+  addTicketSchema,
   chpsCompoundSchema,
   updateChpsCompoundSchema,
 } from "../db/schemas/chps-compound";
@@ -18,6 +20,8 @@ type ChpsData = z.infer<typeof chpsCompoundSchema>;
 export type UpdateAdminData = z.infer<typeof updateAmdinSchema>;
 export type CreateAdminData = z.infer<typeof createAdminSchema>;
 export type OutreachProgramData = z.infer<typeof outreachProgramSchema>;
+export type AddTicketData = z.infer<typeof addTicketSchema>;
+export type UpdateTicketData = z.infer<typeof updateTicketSchema>;
 export type OutreachParticipationData = z.infer<
   typeof outreachParticipationSchema
 >;

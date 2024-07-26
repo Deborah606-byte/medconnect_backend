@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
+import AppError from "../../utils/app-error";
 import { STAFF_ROLES } from "../../config/constants";
 import { StaffIdGenerator } from "../../services/id";
-import AppError from "../../utils/app-error";
 import { StatusCodes } from "http-status-codes";
 
 const requiredString = {

@@ -5,8 +5,11 @@ const LOGS_DIR = path.join(__dirname, "..", "..", "logs");
 
 export const APP_LOG = path.join(LOGS_DIR, "app.log");
 export const REQUEST_LOG = path.join(LOGS_DIR, "request.log");
+export const STATUSES = { SUCCESS: true, FAILED: false } as const;
 export const STAFF_ROLES = ["Admin", "Staff"] as const;
 export const GENDERS = ["Male", "Female", "Other"] as const;
+export const TICKET_STATUSES = ["OPEN", "CLOSED"] as const;
+export const TICKET_PRIORITY = ["LOW", "MEDIUM", "HIGH"] as const;
 export const OUTREACH_ACTIONS = ["Participate", "Volunteer"] as const;
 export const MARITAL_STATUSES = [
   "Single",
@@ -14,10 +17,6 @@ export const MARITAL_STATUSES = [
   "Divorced",
   "Widowed",
 ] as const;
-export const STATUSES = {
-  SUCCESS: true,
-  FAILED: false,
-};
 export const FE_URLS = {
   DEV: "http://localhost:3000",
   VERCEL: "https://medconnect-gh.vercel.app",
