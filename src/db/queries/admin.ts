@@ -1,10 +1,12 @@
-import { Admin, OutreachProgram } from "../models/admin";
+import { Admin, OutreachProgram, Ticket } from "../models/admin";
 import { createUser } from "./user";
 import { deactivateActiveParticipations } from "./chps-compound";
 import type {
   UpdateAdminData,
   CreateAdminData,
   OutreachProgramData,
+  AddTicketData,
+  UpdateTicketData,
 } from "../../types/chps-compound";
 
 export const createAdmin = async (data: CreateAdminData) => {
@@ -37,3 +39,16 @@ export const deleteOutreachProgram = async (id: string) => {
   await deactivateActiveParticipations(id);
   return await OutreachProgram.findByIdAndDelete(id);
 };
+
+// tickets
+export const fetchTickets = async () => await Ticket.find({});
+export const createTicket = async (cid: string, data: AddTicketData) =>
+  await Ticket.create({ requestedById: cid, ...data });
+export const fetchChpsTickets = async (cid: string) =>
+  await Ticket.find({ requestedById: cid });
+export const fetchTicket = async (cid: string, tid: string) =>
+  await Ticket.findOne({ requestedById: cid, _id: tid });
+export const updateTicket = async (tid: string, data: UpdateTicketData) =>
+  await Ticket.findByIdAndUpdate(tid, data, { new: true });
+export const deleteTicket = async (tid: string) =>
+  await Ticket.findByIdAndDelete(tid);

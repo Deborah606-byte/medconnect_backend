@@ -13,6 +13,8 @@ import {
   fetchOutreachPrograms,
   updateOutreachProgram,
   deleteOutreachProgram,
+  fetchTickets,
+  updateTicket,
 } from "../db/queries/admin";
 import type {
   UpdateAdminData,
@@ -110,4 +112,18 @@ export const removeOutreachProgram = catchAsync(async (req, res, next) => {
     return next(new AppError("Not found", StatusCodes.NOT_FOUND));
   }
   return res.status(StatusCodes.NO_CONTENT).json({ status: STATUSES.SUCCESS });
+});
+
+// ticket
+export const getTickets = catchAsync(async (req, res) => {
+  const tickets = await fetchTickets();
+  return res.json({ status: STATUSES.SUCCESS, data: tickets });
+});
+export const editTicket = catchAsync(async (req, res, next) => {
+  const ticketId = req.params.tid;
+  const data = req.body;
+  const ticket = await updateTicket(ticketId, data);
+
+  if (!ticket) return next(new AppError("Not found", StatusCodes.NOT_FOUND));
+  return res.json({ status: STATUSES.SUCCESS, data: ticket });
 });

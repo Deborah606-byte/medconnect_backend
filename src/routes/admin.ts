@@ -5,6 +5,7 @@ import {
   validateAdminData,
   validateUpdateAdminData,
   validateOutreachProgramData,
+  validateUpdateTicketData,
 } from "../middleware/validators";
 import {
   addAdmin,
@@ -19,6 +20,8 @@ import {
   getOutreachPrograms,
   editOutreachProgram,
   removeOutreachProgram,
+  getTickets,
+  editTicket,
 } from "../controllers/admin";
 
 const router = express.Router();
@@ -47,5 +50,13 @@ router
   .get(getOutreachProgram)
   .delete(removeOutreachProgram)
   .patch(validateOutreachProgramData, editOutreachProgram);
+
+router.get(URLS.admin.ticket.all, authorizeAdmin, getTickets);
+router.patch(
+  URLS.admin.ticket.one,
+  authorizeAdmin,
+  validateUpdateTicketData,
+  editTicket
+);
 
 export const admin = router;
