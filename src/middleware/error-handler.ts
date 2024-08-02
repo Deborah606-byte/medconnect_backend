@@ -9,9 +9,10 @@ import type { Request, Response, NextFunction } from "express";
 type MongooseError = Error & {
   code?: number;
   keyValue: Record<string, unknown>;
+  path: string;
 };
 
-export default function globalErrorHandler(
+export function globalErrorHandler(
   error: Error | ZodError,
   req: Request,
   res: Response,
@@ -27,22 +28,34 @@ export default function globalErrorHandler(
       .json({ status: STATUSES.FAILED, message });
   }
 
-  if (error.name == "MongoServerError") {
+  if (error.name === "MongoServerError") {
     const err = error as MongooseError;
     error = formatMongooseError(err);
   }
 
+  if (error.name === "CastError" || error.name === "ValidationError") {
+    const err = error as MongooseError;
+    const key = err.message.split(": ")[1] ?? err.path;
+    const message = `Invalid type provided: ${key}`;
+
+    logger.error({ type: "DbError", error });
+
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ status: STATUSES.FAILED, message });
+  }
+
   if (error instanceof AppError) {
     const { status, statusCode, message } = error;
-    logger.error({ type: "dbError", error: message });
+    logger.error({ type: "AppError", error: message });
     return res.status(statusCode).json({ status, message });
   }
 
-  logger.error({ type: "SystemError", error: error.message });
+  logger.error({ type: "SystemError", error });
 
   return res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ status: STATUSES.FAILED, message: "Internal Server Error" });
+    .json({ status: STATUSES.FAILED, message: "Something went wrong" });
 }
 
 function formatMongooseError(error: MongooseError) {

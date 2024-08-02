@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
+import AppError from "../../utils/app-error";
 import { STAFF_ROLES } from "../../config/constants";
+import { StaffIdGenerator } from "../../services/id";
+import { StatusCodes } from "http-status-codes";
 
 const requiredString = {
   type: String,
@@ -21,10 +24,11 @@ const role = new mongoose.Schema({
 
 const staff = new mongoose.Schema(
   {
-    staffID: requiredString,
+    staffId: requiredString,
     fullName: requiredString,
     dateOfBirth: requiredString,
     dateOfHire: requiredString,
+    contact: requiredString,
     position: requiredString,
     email: {
       ...requiredString,
@@ -44,6 +48,19 @@ const staff = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+staff.pre("validate", async function (next) {
+  const idGenerator = new StaffIdGenerator(this, this.staffId);
+  const { status, data } = await idGenerator.generate();
+
+  if (!status) {
+    const error = new AppError(data, StatusCodes.PRECONDITION_FAILED);
+    return next(error);
+  }
+
+  this.staffId = data;
+  next();
+});
 
 export const Role = mongoose.model("Role", role);
 export const Staff = mongoose.model("Staff", staff);

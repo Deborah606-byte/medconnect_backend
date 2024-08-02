@@ -4,7 +4,6 @@ import { StatusCodes } from "http-status-codes";
 import { STATUSES, EMAIL } from "../config/constants";
 import { EmailService } from "../services/mail";
 import { authUtil } from "../utils/auth";
-import { getDefaultStaff, getRoleByStaffId } from "../db/queries/staff";
 import {
   getUserByEmail,
   createResetToken,
@@ -12,8 +11,10 @@ import {
   updateUserPassword,
   deleteResetToken,
 } from "../db/queries/user";
+import { LoginService } from "../services/user";
 import type { LoginData, ResetPasswordData } from "../types/chps-compound";
 import type { Request, Response, NextFunction } from "express";
+import { getFEUrl } from "../config/env";
 
 export const login = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -31,10 +32,11 @@ export const login = catchAsync(
       );
     }
 
-    const staff = await getDefaultStaff(user._id.toString(), email);
-    const role = await getRoleByStaffId(staff?._id?.toString() ?? "");
+    const authId = user._id.toString();
+    const loginService = new LoginService(authId, user.isSuperAdmin);
+    const actor = await loginService.getAuthedActor();
 
-    if (!staff || !role) {
+    if (!actor) {
       return next(
         new AppError(
           "Error, please contact your admin",
@@ -42,22 +44,10 @@ export const login = catchAsync(
         )
       );
     }
-    const tokenData = {
-      user: user._id.toString(),
-      staff: staff._id.toString(),
-      role: role.type,
-    };
+
     res.json({
       status: STATUSES.SUCCESS,
-      data: {
-        auth: {
-          email,
-          id: user._id,
-          role: role.type,
-          token: authUtil.generateToken(tokenData),
-        },
-        staff: staff,
-      },
+      data: { ...actor, auth: { ...actor.auth, email } },
     });
   }
 );
@@ -79,10 +69,11 @@ export const forgotPassword = catchAsync(
     }
 
     const { token } = await createResetToken(user._id);
+    const feUrl = getFEUrl();
     const emailOptions = {
       to: email,
       subject: EMAIL.reset.subject,
-      text: EMAIL.reset.getText(token),
+      text: EMAIL.reset.getText(token, feUrl),
     };
 
     const emailService = new EmailService();
@@ -120,3 +111,17 @@ export const resetPassword = catchAsync(
     });
   }
 );
+
+export const getStaffAuth = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { user } = req.auth!;
+  const service = new LoginService(user, false);
+  const response = await service.authStaff(id);
+
+  if (!response) {
+    const error = new AppError("Auth Failed", StatusCodes.PRECONDITION_FAILED);
+    return next(error);
+  }
+
+  return res.json({ status: STATUSES.SUCCESS, data: { ...response } });
+});
