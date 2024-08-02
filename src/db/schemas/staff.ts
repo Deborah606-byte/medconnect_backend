@@ -6,15 +6,16 @@ export const roleSchema = z.object({
   staffId: z.string(),
 });
 
-export const staffSchema = z.object({
-  staffID: z.string(),
-  fullName: z.string(),
-  dateOfBirth: z.string(),
-  dateOfHire: z.string(),
-  position: z.string(),
-  email: z.string().email(),
-  contact: z.string().min(8),
-  gender: z.enum(["Male", "Female", "Other"]),
-  workSchedule: z.array(z.string()),
-  chpsCompoundId: z.string(),
-});
+export const staffSchema = z
+  .object({
+    fullName: z.string(),
+    dateOfBirth: z.string(),
+    dateOfHire: z.string(),
+    position: z.string(),
+    email: z.string().email(),
+    contact: z.string().min(8),
+    gender: z.enum(["Male", "Female", "Other"]),
+    workSchedule: z.array(z.string()),
+    chpsCompoundId: z.string(),
+  })
+  .strict();

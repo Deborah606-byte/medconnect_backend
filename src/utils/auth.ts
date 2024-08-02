@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../config/env";
@@ -28,8 +29,7 @@ class AuthUtility {
         const { iat } = this.decodeToken(token) as { iat: number };
         if (Date.now() > iat) this.tokenBlacklist.delete(token);
       }
-    }),
-      15 * 60 * 1000;
+    }, 15 * 60 * 1000);
   }
 
   public async generateHashedPassword(password: string) {
@@ -49,6 +49,15 @@ class AuthUtility {
     if (this.isTokenBlacklisted(token)) return { valid: false };
     const data = this.decodeToken(token);
     return { valid: !!data, data };
+  }
+
+  public generatetempPassword() {
+    return crypto
+      .randomBytes(this.bcryptRounds)
+      .toString("base64")
+      .slice(0, this.bcryptRounds)
+      .replace(/\+/g, "0")
+      .replace(/\//g, "0");
   }
 }
 

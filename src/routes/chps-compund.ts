@@ -6,26 +6,66 @@ import {
   getCompounds,
   deleteCompound,
   updateCompound,
+  addInventory,
+  getInventory,
+  getInventories,
+  updateInventory,
+  deleteInventory,
+  addOutreachParticipation,
+  updateOutreachParticipation,
+  getTicket,
+  getTickets,
+  addTicket,
 } from "../controllers/chps-compound";
 import {
+  validateAddTicketData,
   validateChpsCompoundData,
-  validateChpsRequestParams,
   validateChpsUpdateData,
+  validateInventoryData,
+  validateOutreachParticipationData,
 } from "../middleware/validators";
-import { authorizeAdmin, authorizeUser } from "../middleware/auth-requests";
+import { authorizeAdmin } from "../middleware/auth-requests";
 
 const router = express.Router();
 
+router
+  .route(URLS.chps.all)
+  .all(authorizeAdmin)
+  .post(validateChpsCompoundData, createCompound)
+  .get(getCompounds);
+
+router
+  .route(URLS.chps.one)
+  .get(getCompound)
+  .put(validateChpsUpdateData, updateCompound)
+  .delete(authorizeAdmin, deleteCompound);
+
+router
+  .route(URLS.chps.inventory.all)
+  .get(getInventories)
+  .post(validateInventoryData, addInventory);
+router
+  .route(URLS.chps.inventory.one)
+  .get(getInventory)
+  .patch(validateInventoryData, updateInventory)
+  .delete(deleteInventory);
+
 router.post(
-  URLS.chps.all,
-  authorizeAdmin,
-  validateChpsCompoundData,
-  createCompound
+  URLS.chps.outreachParticipation.all,
+  validateOutreachParticipationData,
+  addOutreachParticipation
 );
-router.use(authorizeUser, validateChpsRequestParams);
-router.get(URLS.chps.one, getCompound);
-router.put(URLS.chps.one, validateChpsUpdateData, updateCompound);
-router.get(URLS.chps.all, authorizeAdmin, getCompounds);
-router.delete(URLS.chps.one, authorizeAdmin, deleteCompound);
+router.patch(
+  URLS.chps.outreachParticipation.one,
+  validateOutreachParticipationData,
+  updateOutreachParticipation
+);
+
+//tickets
+router
+  .route(URLS.chps.ticket.all)
+  .get(getTickets)
+  .post(validateAddTicketData, addTicket);
+router.get(URLS.chps.ticket.one, getTicket);
 
 export const chps = router;
