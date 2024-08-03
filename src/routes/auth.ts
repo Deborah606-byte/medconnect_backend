@@ -16,6 +16,18 @@ import {
 
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  try {
+    res.status(200).json({
+      message: "Hello from Medconnect API",
+    });
+  } catch (error) {
+    res.status(404).json({
+      message: "Endpoint Not Found",
+    });
+  }
+});
+
 router.post(URLS.auth.login, validateLoginData, login);
 router.post(URLS.auth.logout, authorize, logout);
 router.post(URLS.auth.resetPassword, validateResetPasswordData, resetPassword);
